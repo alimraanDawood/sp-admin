@@ -1,255 +1,233 @@
 <template>
-    <Form :validation-schema="formSchema" v-slot="{ values }"
-        class="flex flex-col gap-5 md:w-[75vw] lg:w-[50vw] h-full w-full py-5">
-        <div class="flex flex-col gap-2">
-            <FormField v-slot="{ componentField }" name="username">
-                <FormLabel>Product Name</FormLabel>
-                <FormControl>
-                    <Input type="text" placeholder="Jacket" v-bind="componentField" />
-                </FormControl>
+    <div class="flex flex-col w-full lg:w-1/2">
 
-                <FormDescription>
-                    Your Product's display name
-                </FormDescription>
-                <FormMessage />
+        <form @submit="onSubmit" class="flex flex-col gap-8">
+            <!-- Product Name -->
+            <FormField v-slot="{ componentField }" name="name">
+                <FormItem>
+                    <FormLabel>Product Name</FormLabel>
+                    <FormControl>
+                        <Input type="text" placeholder="e.g Jacket" v-bind="componentField" />
+                    </FormControl>
+                    <FormDescription>
+                        This is the display name of the product.
+                    </FormDescription>
+                    <FormMessage />
+                </FormItem>
             </FormField>
-        </div>
 
-        <div class="flex flex-col gap-2">
+            <!-- Product Description -->
             <FormField v-slot="{ componentField }" name="description">
-                <FormLabel>Product Description</FormLabel>
-                <FormControl>
-                    <Textarea class="border" v-bind="componentField" />
-                </FormControl>
-
-                <FormDescription>
-                    Details about your product.
-                </FormDescription>
-                <FormMessage />
+                <FormItem>
+                    <FormLabel>Product Description</FormLabel>
+                    <FormControl>
+                        <Textarea placeholder="" v-bind="componentField" />
+                    </FormControl>
+                    <FormDescription>
+                        Provide a detailed description of the product. This will help customers understand what the
+                        product is and its features.
+                    </FormDescription>
+                    <FormMessage />
+                </FormItem>
             </FormField>
-        </div>
 
-        <!-- Add Media -->
-        <div class="flex flex-col gap-2">
-            <button @click="chooseFiles" v-wave ref="dropZoneRef"
-                class="flex flex-col w-full border rounded-lg p-3 items-center justify-center border-primary bg-primary/5 text-primary">
-                <div v-if="!isOverDropZone" class="flex flex-col gap-1 text-center">
-                    <div class="flex flex-row gap-2">
-                        <PhosphorIconUploadSimple :size="20" />
-                        <span>Upload Images</span>
-                    </div>
-                    <span class="text-primary/70 text-sm">Drag and drop images or click to upload.</span>
-                </div>
+            <!-- Product Media  -->
+            <FormField v-slot="{ value }" name="media">
+                <FormItem>
+                    <FormLabel>Product Media</FormLabel>
+                    <FormControl>
+                        <button type="button" @click="addMedia" ref="dropZoneRef"
+                            class="w-full outline-2 outline-dashed rounded-lg p-5 items-center flex text-black/50 flex-col justify-center gap-1 hover:outline-blue-500"
+                            :class="{ 'outline-blue-500 text-blue-500': isOverDropZone }">
+                            <div class="flex flex-row gap-1 items-center font-semibold">
+                                <PhosphorIconDownloadSimple :size="20" />
 
-                <div v-else class="flex flex-col">
-                    <PhosphorIconFilePlus :size="44" />
-                </div>
-            </button>
+                                Upload Files
+                            </div>
+                            <span>Drag and drop images here or click to upload</span>
+                        </button>
 
-            <div class="flex flex-col w-full gap-1 rounded-lg">
-                <div v-for="image, index in image_links"
-                    class="flex flex-row p-1 gap-3 aspect-square h-16 border border-primary/60 rounded items-center">
-                    <button class="p-1">
-                        <PhosphorIconDotsSixVertical :size="20" />
-                    </button>
-
-                    <div class="h-full bg-black aspect-square rounded bg-center bg-cover"
-                        :style="{ backgroundImage: `url('${image}')` }"></div>
-
-                    <TooltipProvider>
-                        <Tooltip>
-                            <TooltipTrigger>
-                                <PhosphorIconImage v-if="thumb === null ? (index === 0) : (thumb === image)" :size="20"
-                                    weight="fill" class="text-primary" />
-                            </TooltipTrigger>
-                            <TooltipContent>
-                                <p>Default Thumbnail</p>
-                            </TooltipContent>
-                        </Tooltip>
-                    </TooltipProvider>
-
-
-                    <div class="flex flex-row text-black/50 ml-auto ">
-                        <DropdownMenu>
-                            <DropdownMenuTrigger>
-                                <button class="p-2">
-                                    <PhosphorIconDotsThree weight="bold" :size="20" />
+                        <div ref="sortable" class="flex flex-col gap-1">
+                            <div :key="index" v-for="file, index in value"
+                                class="flex flex-row items-center gap-3 p-2 border rounded-lg w-full shadow">
+                                <button type="button" class="hover:cursor-grab active:cursor-grabbing">
+                                    <PhosphorIconDotsSixVertical :size="24" />
                                 </button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent>
-                                <DropdownMenuItem>
-                                    <button @click="makeThumb(image)" class="flex flex-row gap-1 items-center">
-                                        <PhosphorIconImage :size="18" />
 
-                                        <span>Make thumbnail</span>
+                                <div class="bg-primary w-12 aspect-square rounded bg-cover bg-center"
+                                    :style="{ backgroundImage: `url('${getURL(file)}')` }"></div>
+
+                                <div class="flex flex-col w-full">
+                                    <span class="text-sm">{{ file.name }}</span>
+                                    <span class="text-xs">{{ formatFileSize(file.size) }}</span>
+                                </div>
+
+                                <div class="flex flex-row items-center gap-2">
+                                    <button type="button">
+                                        <PhosphorIconDotsThree :size="20" />
                                     </button>
-                                </DropdownMenuItem>
-                                <DropdownMenuItem>
-                                    <button @click="deleteImage(index)" class="flex flex-row gap-1 items-center">
-                                        <PhosphorIconTrash :size="18" />
 
-                                        <span>Delete Image</span>
+                                    <button @click="deleteImage(file)" type="button">
+                                        <PhosphorIconX :size="20" />
                                     </button>
-                                </DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
+                                </div>
+                            </div>
+                        </div>
+                    </FormControl>
+                    <FormDescription>
+                        Provide a detailed description of the product. This will help customers understand what the
+                        product is and its features.
+                    </FormDescription>
+                    <FormMessage />
+                </FormItem>
+            </FormField>
 
+            <!-- Has Variants? -->
+            <FormField v-slot="{ componentField, value, handleChange }" name="hasVariants">
+                <FormItem>
+                    <FormLabel>Variants</FormLabel>
+                    <FormControl>
+                        <div class="flex flex-row p-5 gap-3 border shadow rounded-lg">
+                            <Switch :checked="value" @update:checked="handleChange" />
 
-                        <TooltipProvider>
-                            <Tooltip>
-                                <TooltipTrigger>
-                                    <button @click="deleteImage(index)" class="p-2">
-                                        <PhosphorIconX weight="bold" :size="20" />
-                                    </button>
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                    <p>Delete Image</p>
-                                </TooltipContent>
-                            </Tooltip>
-                        </TooltipProvider>
-                    </div>
-                </div>
-            </div>
-        </div>
+                            <div class="flex flex-col gap-1">
+                                <span class="font-medium">This is a product with variants</span>
+                                <span class="text-sm text-black/80">When unchecked a default variant shall be created
+                                    for you!</span>
+                            </div>
+                        </div>
+                    </FormControl>
 
-        <div class="flex flex-col gap-2">
-            <FormField v-slot="{ value, handleChange }" name="hasVariants">
-                <FormLabel>Variants</FormLabel>
-                <FormControl>
-                    <div class="p-3 border shadow rounded-lg w-full flex flex-row gap-2 items-center">
-                        <Switch :checked="value" @update:checked="handleChange" />
+                    <FormMessage />
+                </FormItem>
+            </FormField>
+
+            {{ form.values }}
+            <!-- Variant Options -->
+            <div v-if="form.values.hasVariants">
+                <div class="flex flex-col gap-3">
+                    <div class="flex flex-row items-center justify-between">
                         <div class="flex flex-col">
-                            <span class="font-medium">Yes, this is a product with variants</span>
-                            <span class="text-sm text-black/70">When unchecked, a default variant will be
-                                created.</span>
+                            <span>Product Options</span>
+                            <span class="text-black/80">Define the options for the product, e.g. color, size,
+                                etc.</span>
+                        </div>
+                        <button type="button"
+                            @click="form.setFieldValue('variantOptions', [...form.values.variantOptions, { name: '', values: [] }])"
+                            class="text-white bg-primary text-sm px-4 p-1 rounded">Add</button>
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                        <div v-for="option in form.values.variantOptions"
+                            class="border shadow w-full rounded-lg p-3 flex flex-row items-center gap-1">
+                            <div class="flex flex-col gap-1 w-full">
+                                <Input type="text" v-model="option.name" placeholder="Property name e.g color" />
+
+                                <TagsInput :model-value="option.values"
+                                    @update:model-value="(val) => option.values = val">
+                                    <TagsInputItem class="bg-primary text-white" v-for="item in option.values"
+                                        :key="item" :value="item">
+                                        <TagsInputItemText />
+                                        <TagsInputItemDelete
+                                            @click="option.values.splice(option.values.indexOf(item))" />
+                                    </TagsInputItem>
+
+                                    <TagsInputInput
+                                        :placeholder="option.values.length ? 'Enter option' : 'Red, Green, Blue (use commas to seperate)'" />
+                                </TagsInput>
+                            </div>
+                            <button type="button" @click="form.setFieldValue('variantOptions', form.values.variantOptions.filter(opt => opt !== option))">
+                                <PhosphorIconX :size="18" />
+                            </button>
                         </div>
                     </div>
-                </FormControl>
+                </div>
+            </div>
+
+
+            <!-- Variants -->
+            <FormField v-if="form.values.hasVariants" v-slot="{ value }" name="variants">
+                <FormMessage />
+                <VariantTable
+                    v-if="form.values.variantOptions.filter((option) => option.name.length > 0 && option.values.length > 0).length > 0"
+                    @update:selected="(val) => form.setFieldValue('variants', val)"
+                    :variant-options="form.values.variantOptions.filter((option) => option.name.length > 0 && option.values.length > 0)" />
             </FormField>
-        </div>
+        </form>
 
-        <div v-if="values.hasVariants" class="flex flex-col w-full gap-2">
-            <div class="flex flex-col gap-1">
-                <div class="flex flex-row w-full justify-between">
-                    <span class="font-medium">Variant Options</span>
-                    <button @click="addVariantOption"
-                        class="text-sm bg-primary text-white font-medium flex flex-row px-4 p-1 rounded">Add</button>
-                </div>
-                <span class="text-sm text-black/70">Define the options for your product variants e.g Size, Color.</span>
-            </div>
-            <div v-for="variant, index  in variants"
-                class="flex flex-row w-full border gap-3 items-start shadow rounded-lg p-3">
-                <div class="flex flex-col gap-3 w-full">
-                    <Input placeholder="Title e.g Colour" />
-                    <TagsInput :model-value="variant.options">
-                        <TagsInputItem class="bg-primary text-white font-medium" v-for="item in variant.options"
-                            :key="item" :value="item">
-                            <TagsInputItemText />
-                            <TagsInputItemDelete />
-                        </TagsInputItem>
-
-                        <TagsInputInput placeholder="Options e.g Red, Green, Blue " />
-                    </TagsInput>
-                </div>
-                <button  @click="deleteVariantOption(index)">
-                    <PhosphorIconX :size="20" />
-                </button>
-            </div>
-        </div>
-
-        <!-- TODO: Add Variant Table -->
-
-    </Form>
+    </div>
 </template>
 
-<script setup lang="ts">
-import { useForm } from 'vee-validate'
+<script setup>
+import { useForm } from 'vee-validate';
 import { toTypedSchema } from '@vee-validate/zod'
-import * as z from 'zod'
+import VariantTable from './VariantTable.vue';
 
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
+import { useVuelidate } from '@vuelidate/core'
+import { required, email } from '@vuelidate/validators'
 
-import {
-    FormControl,
-    FormDescription,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage
-} from '@/components/ui/form';
 
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger
-} from '@/components/ui/tooltip'
+import * as z from 'zod';
 
-import { TagsInput, TagsInputInput, TagsInputItem, TagsInputItemDelete, TagsInputItemText } from '@/components/ui/tags-input'
-import { Textarea } from '~/components/ui/textarea';
+const props = defineProps(['formValues']);
+const emits = defineEmits(['update:formValues', 'complete']);
 
-import { Input } from '@/components/ui/input';
-import { Switch } from '@/components/ui/switch';
+const selection = ref([])
+
 
 const formSchema = toTypedSchema(z.object({
-    name: z.string().min(2).max(100),
-    description: z.string().max(500).optional(),
-    hasVariants: z.boolean().optional(),
-    files: z.array(z.instanceof(File))
-}))
+    name: z.string().min(2).max(50),
+    description: z.string().max(500),
+    media: z.array(z.instanceof(File)).default([]).optional(),
+    hasVariants: z.boolean(),
+    variantOptions: z.array(z.object({ name: z.string(), values: z.array(z.string()).max(50) })),
+    variants: z.array(z.any()).min(1, 'Atleast 1 variant is required!').default([{ options: [], price: 0, stock: 0, allowBackOrder: false, manageInventory: false, media: [], thumb: null }]),
+}));
 
 const form = useForm({
     validationSchema: formSchema,
+    initialValues: props.formValues,
 });
 
-
-const dropZoneRef = ref<HTMLButtonElement>();
-const images = ref<File[]>([]);
-const image_links = ref<String[]>([]);
-const thumb = ref<File | null>(null);
-
-
-function chooseFiles() {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.multiple = true;
-    input.accept = 'image/*';
-    input.onchange = (event: Event) => {
-        const target = event.target as HTMLInputElement;
-        if (target.files) {
-            onDrop(Array.from(target.files));
-        }
-    };
-    input.click();
-}
-
-function makeThumb(image: File) {
-    thumb.value = image;
-}
-
-function onDrop(files: File[] | null) {
-    // called when files are dropped on zone
-    if (files) {
-        images.value = images.value.concat(files);
-        console.log(images)
-        image_links.value = getUrls(images.value);
+function validateForm() {
+    form.validate();
+    if (form.meta.value.valid) {
+        emits('update:formValues', form.values);
+        emits('complete');
     }
 }
 
-function getUrls(files: File[]) {
-    return files.map((file: File) => URL.createObjectURL(file));
+function onSubmit(values) {
+    console.log(values);
 }
 
-function deleteImage(index: number) {
-    images.value.splice(index, 1);
-    image_links.value = getUrls(images.value);
+// Expose the `validateForm` method
+defineExpose({
+    validateForm,
+    form
+});
+
+// file management
+import { useDropZone } from '@vueuse/core'
+import { useSortable } from '@vueuse/integrations/useSortable'
+
+const dropZoneRef = ref();
+const sortable = ref();
+const media = computed({
+    get() {
+        return form.values.media;
+    },
+    set(value) {
+        form.setFieldValue('media', value);
+    }
+});
+
+useSortable(sortable, media, { animation: 150 });
+
+function onDrop(files) {
+    console.log(files);
+    form.setFieldValue('media', [...form.values.media, ...files]);
+    // called when files are dropped on zone
 }
 
 const { isOverDropZone } = useDropZone(dropZoneRef, {
@@ -260,26 +238,32 @@ const { isOverDropZone } = useDropZone(dropZoneRef, {
     multiple: true,
     // whether to prevent default behavior for unhandled events
     preventDefaultForUnhandled: false,
-});
+})
 
-
-
-const onSubmit = form.handleSubmit((values) => {
-    console.log('Form submitted!', values)
-});
-
-
-const variants = ref([{
-    title: '',
-    options: []
-}])
-
-function addVariantOption() {
-    variants.value.push({ title: '', options: [] });
+function addMedia() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/jpeg';
+    input.multiple = true;
+    input.onchange = (event) => {
+        const files = Array.from(event.target.files);
+        onDrop(files);
+    };
+    input.click();
 }
 
-function deleteVariantOption(index) {
-    variants.value.splice(index, 1);
+function formatFileSize(size) {
+    const i = Math.floor(Math.log(size) / Math.log(1024));
+    return (size / Math.pow(1024, i)).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i];
+}
+
+function getURL(file) {
+    return URL.createObjectURL(file);
+}
+
+function deleteImage(file) {
+    form.setFieldValue('media', form.values.media.filter((f) => f !== file));
+    URL.revokeObjectURL(file);
 }
 
 </script>

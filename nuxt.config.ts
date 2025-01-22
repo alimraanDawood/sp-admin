@@ -11,6 +11,7 @@ export default defineNuxtConfig({
     'nuxt-phosphor-icons',
     'v-wave/nuxt',
     '@pinia/nuxt',
+    'nuxt-viewport',
   ],
 
   plugins: [

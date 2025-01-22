@@ -1,73 +1,152 @@
 <template>
-    <div class="flex flex-col h-[100dvh] overflow-hidden w-full bg-primary p-3">
-        <div class="bg-white flex flex-col h-full w-full rounded-lg overflow-hidden">
-            <!-- Form Header -->
-            <div class="flex flex-col gap-3 p-3 border-b shadow-sm">
-                <div class="flex flex-row w-full justify-between items-center">
-                    <span class="text-lg font-medium">Create Product</span>
+    <div class="flex flex-col w-full h-[100dvh] p-3 bg-black/20">
+        <div class="flex flex-col w-full h-full rounded-lg bg-white border shadow">
+            <div class="flex flex-row w-full border-b divide-x">
+                <button :disabled="currentStage === 'PUSH'" class="flex flex-row items-center gap-3 p-3">
+                    <PhosphorIconX :size="18" />
 
-                    <button class="grid place-items-center p-3 text-primary bg-primary/20 rounded-full">
-                        <PhosphorIconX :size="20" />
-                    </button>
+                    <span class="bg-black/5 border text-black/50 px-2 p-1 text-sm shadow rounded">esc</span>
+                </button>
+
+
+                <button @click="switchTo('DETAILS')" :disabled="currentStage === 'PUSH'" class="disabled:opacity-50 flex flex-row items-center gap-1 text-black/50 p-3 bg-[#FAFAFA] hover:bg-black/5 w-44" :class="{ '!bg-white hover:bg-white' : currentStage === 'DETAILS' }">
+                    <PhosphorIconCircleHalf weight="fill" class="text-blue-500" v-if="currentStage === 'DETAILS'" :size="18" />
+                    <PhosphorIconCircleDashed v-else :size="18" />
+
+                    Details
+                </button>
+
+                <button @click="switchTo('CATEGORIZATION')" :disabled="currentStage === 'PUSH'" class="disabled:opacity-50 flex flex-row items-center gap-1 text-black/50 p-3 bg-[#FAFAFA] hover:bg-black/5 w-44" :class="{ '!bg-white hover:bg-white' : currentStage === 'CATEGORIZATION' }">
+                    <PhosphorIconCircleHalf weight="fill" class="text-blue-500" v-if="currentStage === 'CATEGORIZATION'" :size="18" />
+                    <PhosphorIconCircleDashed v-else :size="18" />
+
+                    Categorization
+                </button>
+
+                <button @click="switchTo('VARIANTS')" :disabled="currentStage === 'PUSH'" class="disabled:opacity-50 flex flex-row items-center gap-1 text-black/50 p-3 bg-[#FAFAFA] hover:bg-black/5 w-44" :class="{ '!bg-white hover:bg-white' : currentStage === 'VARIANTS' }">
+                    <PhosphorIconCircleHalf weight="fill" class="text-blue-500" v-if="currentStage === 'VARIANTS'" :size="18" />
+                    <PhosphorIconCircleDashed v-else :size="18" />
+
+                    Variants
+                </button>
+
+                <button v-if="currentStage === 'PUSH'" class="flex flex-row items-center gap-1 text-black/50 p-3 bg-[#FAFAFA] hover:bg-black/5 w-44" :class="{ '!bg-white hover:bg-white' : currentStage === 'PUSH' }">
+                    <PhosphorIconSpinner weight="regular" class="text-blue-500 animate-spin" v-if="currentStage === 'PUSH'" :size="18" />
+                    <PhosphorIconCircleDashed v-else :size="18" />
+
+                    Uploading
+                </button>
+            </div>
+
+            <!-- Main Body -->
+            <div class="flex flex-col w-full h-full items-center overflow-y-scroll">
+                <div class="flex flex-col h-full w-full items-center p-3">
+                    <CreateProductDetails v-show="currentStage === 'DETAILS'" ref="detailsForm" @complete="nextForm" :form-values="forms.details" @update:formValues="(val) => { forms.details = val; forms.variants.variants = forms.details.variants }" />
+                    <CreateProductCategorization v-show="currentStage === 'CATEGORIZATION'" ref="categorizationForm" @complete="nextForm" :form-values="forms.categorization" @update:formValues="(val) => forms.categorization = val" />
+                    <CreateProductVariants v-show="currentStage === 'VARIANTS'" ref="variantsForm" @complete="nextForm" :form-values="forms" @update:formValues="(val) => forms.variants = val" />
+                        
+                    <div v-show="currentStage === 'PUSH'" class="flex gap-1 flex-col w-full h-full items-center justify-center">
+                        <span>Creating Product Please Wait!</span>
+                        <div class="w-[500px] h-1 bg-black/10 rounded"></div>
+                        {{ productStore.create.forms }}
+                    </div>
                 </div>
             </div>
 
-            <!-- Form Body -->
-            <div class="flex flex-col h-full w-full p-3 items-center justify-center overflow-y-scroll">
-                <XyzTransition mode="out-in" xyz="fade">
-                    <CreateProductDetails v-if="currentTab === 'details'" />
-                    <CreateProductOrganization v-else-if="currentTab === 'organization'" />
-                </XyzTransition>
-            </div>
-
-            <!-- Form Footer -->
-            <div class="flex flex-row w-full p-3 items-center border-t shadow-sm">
-                <span class="text-black/50 lg:hidden">Step 1 of 4</span>
-
-                <div class="hidden lg:flex flex-row gap-2">
-                    <button v-wave class="flex flex-row items-center gap-1 text-sm b px-4 p-2 rounded-full text-primary/60 hover:bg-primary/20 hover:text-primary/70 transition-all duration-300 bg-primary/10" :class="{ '!bg-primary text-white hover:text-white' : currentTab === 'details' }" @click="switchTab('details')">
-                        1. Product Details
-                    </button>
-
-                    <button v-wave class="flex flex-row items-center gap-1 text-sm px-4 p-2 rounded-full text-primary/60 hover:bg-primary/20 hover:text-primary/70 transition-all duration-300 bg-primary/10" :class="{ '!bg-primary text-white hover:text-white' : currentTab === 'organization' }" @click="switchTab('organization')">
-                        2. Organize
-                    </button>
-
-                    <button v-wave class="flex flex-row items-center gap-1 text-sm px-4 p-2 rounded-full text-primary/60 hover:bg-primary/20 hover:text-primary/70 transition-all duration-300 bg-primary/10" :class="{ '!bg-primary text-white hover:text-white' : currentTab === 'variants' }" @click="switchTab('variants')">
-                        3. Product Variants
-                    </button>
-                </div>
-                <div class="flex flex-row gap-2 items-center ml-auto">
-                    <button v-wave class="px-4 p-2 rounded-lg bg-primary/30 text-primary font-medium">Cancel</button>
-                    <button v-wave class="px-4 p-2 rounded-lg bg-primary text-white font-medium">Next</button>
-                    <button v-wave class="px-4 p-2 rounded-lg bg-primary text-white font-medium">Save</button>
-                </div>
+            <div class="border-t p-3 flex flex-row gap-2 items-center justify-end">
+                <button v-wave class="px-4 p-1 bg-[#fafafa] hover:bg-black/5 shadow border text-black text-sm rounded">Cancel</button>
+                <button v-wave class="px-4 p-1 bg-primary text-white text-sm rounded">Save as draft</button>
+                <button v-wave class="px-4 p-1 bg-primary text-white text-sm rounded" @click="next">{{ currentStage === 'VARIANTS' ? 'Finish' : 'Next'  }}</button>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-definePageMeta({
-});
 
-import CreateProductDetails from '~/components/Forms/Products/Create/CreateProductDetails.vue';
-import CreateProductOrganization from '~/components/Forms/Products/Create/CreateProductOrganization.vue';
+import CreateProductDetails from '@/components/Forms/Products/Create/CreateProductDetails.vue';
+import CreateProductCategorization from '~/components/Forms/Products/Create/CreateProductCategorization.vue';
+import CreateProductVariants from '~/components/Forms/Products/Create/CreateProductVariants.vue';
+import { getProducts } from '~/services/products';
+
+import { mapStores } from 'pinia';
+import { useProductStore } from '~/stores/product';
+
+
+definePageMeta({
+    breadcrumbs: [{
+        label: 'Products',
+        link: '/main/products/'
+    },
+    {
+        label: 'Create',
+        link: '/main/products/create'
+    }],
+    sidebarLink: 'Products'
+})
 
 export default {
     data() {
         return {
-            currentTab: 'details' // details | organizaton | variants 
+            page: null,
+            currentStage: 'DETAILS', // DETAILS | CATEGORIZATION | VARIANTS
+            
         }
     },
     methods: {
-        switchTab(newTab) {
-            this.currentTab = newTab;
+        next() {
+
+            if(this.currentStage === 'VARIANTS') {
+                this.currentStage = 'PUSH';
+                return;
+            }
+            this.currentForm.validateForm();
+        },
+        nextForm() {
+            if(this.currentForm.form.meta.value.valid) {
+                if(this.currentStage === 'DETAILS') {
+                    this.currentStage = 'CATEGORIZATION';
+                } else if(this.currentStage === 'CATEGORIZATION') {
+                    this.currentStage = 'VARIANTS';
+                } else if(this.currentStage === 'VARIANTS') {
+                    this.currentStage = 'PUSH';
+                }
+            }
+        },
+        switchTo(stage) {
+            if(this.currentForm.form.meta.value.valid || this.currentStage === 'VARIANTS') {
+                this.currentForm.validateForm();
+                this.currentStage = stage;
+            }
         }
+    },
+    computed: {
+        ...mapStores(useProductStore),
+        forms() {
+            return this.productStore.create.forms;
+        },
+        currentForm() {
+            switch(this.currentStage) {
+                case 'DETAILS':
+                    return this.$refs.detailsForm;
+
+                case 'CATEGORIZATION':
+                    return this.$refs.categorizationForm;
+
+                case 'VARIANTS':
+                    return this.$refs.variantsForm;
+                default:
+                    return this.$refs.detailsForm;
+            }
+        }
+    },
+    async mounted() {
+        this.page =  await getProducts(1, 10);
     },
     components: {
         CreateProductDetails,
-        CreateProductOrganization
+        CreateProductCategorization,
+        CreateProductVariants,
     }
 }
 </script>
