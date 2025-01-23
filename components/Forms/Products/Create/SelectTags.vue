@@ -20,11 +20,11 @@ const modelValue = computed({
 const open = ref(false)
 const searchTerm = ref('')
 
-const filteredGroups = computed(() => tags.filter(i => !modelValue.value.includes(i.name)))
+const filteredGroups = computed(() => tags.filter(i => !modelValue.value.includes(i)))
 </script>
 
 <template>
-  <TagsInput class="px-0 gap-0 w-full" :model-value="modelValue">
+  <TagsInput class="px-0 gap-0 w-full" v-model="modelValue">
     <div class="flex gap-2 flex-wrap items-center px-3">
       <TagsInputItem class="bg-primary text-white" v-for="item in modelValue" :key="item.id" :value="item.name">
         <TagsInputItemText />

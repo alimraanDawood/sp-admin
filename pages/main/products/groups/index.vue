@@ -2,51 +2,36 @@
     <div class="flex flex-col w-full h-full p-3">
         <div class="flex flex-col bg-white w-full max-h-full">
             <div class="flex flex-row p-3 border rounded-t-xl">
-                <span class="text-2xl font-medium">Products</span>
+                <span class="text-lg lg:text-2xl font-medium">Products Groups</span>
 
                 <div class="flex flex-row ml-auto gap-2">
-                    <NuxtLink to="/main/products/create" v-wave
-                        class="bg-primary text-sm font-medium text-white flex flex-row gap-2 px-4 p-2 rounded-lg items-center">
-                        <PhosphorIconPlusCircle :size="18" weight="bold" />
-                        Create Product
-                    </NuxtLink>
+                    <CreateGroup @updated="reloadGroups" />
                 </div>
             </div>
-            <div v-if="page" class="flex flex-col w-full border-x">
+            <div v-if="groups" class="flex flex-col w-full border-x">
                 <Table>
                     <TableHeader>
                         <TableRow>
                             <TableHead class="">
-                                Product
+                                Group Name
                             </TableHead>
-                            <TableHead>Variants</TableHead>
-                            <TableHead>Stock</TableHead>
-                            <TableHead>
-                                Status
-                            </TableHead>
+                            <TableHead>Products</TableHead>
+                            
                             <TableHead>
                                 <!-- Actions -->
                             </TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        <TableRow class="cursor-pointer" @click="$router.push(`/main/products/${product.id}`)" v-for="product in page?.items">
+                        <TableRow class="cursor-pointer" @click="$router.push(`/main/products/groups/${group.id}`)" v-for="group in groups">
                             <TableCell class="font-medium">
                                 <div class="flex flex-row items-center gap-2">
-                                    <div class="aspect-square w-8 bg-primary rounded bg-center bg-cover" :style="{ backgroundImage: `url('${getFileUrl(product, product.thumb, { thumb: '50x50' })}')` }"></div>
+                                    <div class="aspect-square w-8 bg-primary rounded bg-center bg-cover" :style="{ backgroundImage: `url('${getFileUrl(group, group.cover, { thumb: '50x50' })}')` }"></div>
 
-                                    <span>{{ product.name }}</span>
+                                    <span>{{ group.name }}</span>
                                 </div>
                             </TableCell>
-                            <TableCell>{{ product.variants.length }} variants</TableCell>
-                            <TableCell>{{ product.expand.variants.reduce((total, variant) => total + variant.stock, 0) }}</TableCell>
-                            <TableCell>
-                                <div class="flex flex-row gap-2 text-sm items-center">
-                                    <div class="bg-green-500 h-4 aspect-square rounded"></div>
-
-                                    <span>Published</span>
-                                </div>
-                            </TableCell>
+                            <TableCell>{{ group.products.length }} Products</TableCell>
 
                             <TableCell class="text-center">
                                 <button>
@@ -65,7 +50,6 @@
 
             <div class="flex flex-row p-3 border rounded-b-xl">
                 <div v-if="page" class="flex flex-row items-center">
-                    Page {{ page.page }} of {{ page.totalPages }} pages
                 </div>
                 <div v-else class="flex flex-row items-center">
                     <div class="h-8 w-32 bg-black/5 rounded animate-pulse"></div>
@@ -76,29 +60,36 @@
 </template>
 
 <script>
-import { getProducts } from '~/services/products';
+import { getProductGroups } from '~/services/products';
+import CreateGroup from '~/components/Widgets/Group/CreateGroup/CreateGroup.vue';
 import { getFileUrl } from '~/services/utils';
 
 definePageMeta({
     layout: 'main',
     breadcrumbs: [{
-        label: 'Products',
-        link: '/main/products/'
+        label: 'Groups',
+        link: '/main/products/groups/'
     }],
-    sidebarLink: 'Products'
+    sidebarLink: 'Products-Groups'
 })
 
 export default {
     data() {
         return {
-            page: null
+            groups: []
         }
     },
     async mounted() {
-        this.page = await getProducts(1, 10);
+        this.groups = await getProductGroups();
     },
     methods: {
         getFileUrl,
+        async reloadGroups() {
+            this.groups = await getProductGroups();
+        }
+    },
+    components: {
+        CreateGroup
     }
 }
 </script>

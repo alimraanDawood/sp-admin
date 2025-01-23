@@ -6,11 +6,49 @@ export const useProductStore = defineStore('product', {
         create: {
             forms: {
                 details: {
-                    name: 'Jacket',
-                    description: 'A product description',
-                    hasVariants: true,
-                    variantOptions: [{ name: 'Size', values: ['SM', 'MD', 'XL'] }, { name: 'Color', values: ['Red', 'Blue', 'Green'] }],
+                    name: '',
+                    description: '',
+                    hasVariants: false,
+                    variantOptions: [{ name: '', values: [] }],
+                    variants: [],
+                    media: [],
+                    thumb: null,
+                    defaultVariant: { options: [{name: 'DEFAULT', value: 'DEFAULT' }], allowBackOrder: false, manageInventory: false, price: 0, stock: 0, media: [], thumb: null }
+                },
+                categorization: {
+                    groups: [],
+                    tags: []
+                },
+                variants: {
                     variants: []
+                }
+            }
+        },
+        saved: {
+            create: null
+        }
+    }),
+
+    actions: {
+        async createProduct() {
+            try {
+                const product = await createProduct(this.create.forms);
+                return product;
+            } catch(e) {
+                throw(e)
+            }
+        },
+        resetCreateForms() {
+            this.create.forms = {
+                details: {
+                    name: '',
+                    description: '',
+                    hasVariants: false,
+                    variantOptions: [{ name: '', values: [] }],
+                    variants: [],
+                    media: [],
+                    thumb: null,
+                    defaultVariant: { options: [{name: 'DEFAULT', value: 'DEFAULT' }], allowBackOrder: false, manageInventory: false, price: 0, stock: 0, media: [], thumb: null }
                 },
                 categorization: {
                     groups: [],
@@ -21,12 +59,10 @@ export const useProductStore = defineStore('product', {
                 }
             }
         }
-    }),
+    },
 
-    actions: {
-        async createProduct() {
-            const product = await createProduct(this.create.details.variantOptions, this.create.details.variants, this.create.details.name, this.create.details.description, this.create.details.hasVariants);
-            console.log(product);
-        }
+    persist: {
+        storage: sessionStorage,
+        pick: ['saved.create'],
     }
 })

@@ -1,110 +1,93 @@
 <template>
     <div class="flex flex-col w-full lg:w-1/2">
-
-        <form @submit="onSubmit" class="flex flex-col gap-8">
+        <div class="flex flex-col gap-8">
+            <span class="text-2xl font-semibold">General Details</span>
             <!-- Product Name -->
-            <FormField v-slot="{ componentField }" name="name">
-                <FormItem>
-                    <FormLabel>Product Name</FormLabel>
-                    <FormControl>
-                        <Input type="text" placeholder="e.g Jacket" v-bind="componentField" />
-                    </FormControl>
-                    <FormDescription>
-                        This is the display name of the product.
-                    </FormDescription>
-                    <FormMessage />
-                </FormItem>
-            </FormField>
+            <div class="flex flex-col w-full gap-2">
+                <span class="font-medium">Product Name</span>
+                <Input type="text" placeholder="e.g Jacket" v-model="v$.name.$model" />
+                
+                <div class="input-errors flex flex-col" v-for="error of v$.name.$errors" :key="error.$uid">
+                    <div class="flex flex-row text-xs p-2 rounded text-red-500 font-medium bg-red-500/10 border border-red-500 items-center gap-1"> <PhosphorIconWarningDiamond :size="16" /> {{ error.$message }}</div>
+                </div>
+                <span class="text-sm text-black/50">
+                    This is the display name of the product.
+                </span>
+            </div>
 
             <!-- Product Description -->
-            <FormField v-slot="{ componentField }" name="description">
-                <FormItem>
-                    <FormLabel>Product Description</FormLabel>
-                    <FormControl>
-                        <Textarea placeholder="" v-bind="componentField" />
-                    </FormControl>
-                    <FormDescription>
-                        Provide a detailed description of the product. This will help customers understand what the
-                        product is and its features.
-                    </FormDescription>
-                    <FormMessage />
-                </FormItem>
-            </FormField>
+            <div class="flex flex-col w-full gap-1">
+                <span class="font-medium">Product Description</span>
+
+                <Textarea placeholder="" v-model="productStore.create.forms.details.description" />
+                <span class="text-sm text-black/50">
+                    Provide a detailed description of the product. This will help customers understand what the
+                    product is and its features.
+                </span>
+            </div>
 
             <!-- Product Media  -->
-            <FormField v-slot="{ value }" name="media">
-                <FormItem>
-                    <FormLabel>Product Media</FormLabel>
-                    <FormControl>
-                        <button type="button" @click="addMedia" ref="dropZoneRef"
-                            class="w-full outline-2 outline-dashed rounded-lg p-5 items-center flex text-black/50 flex-col justify-center gap-1 hover:outline-blue-500"
-                            :class="{ 'outline-blue-500 text-blue-500': isOverDropZone }">
-                            <div class="flex flex-row gap-1 items-center font-semibold">
-                                <PhosphorIconDownloadSimple :size="20" />
+            <div class="flex flex-col w-full gap-1">
+                <span class="font-medium">Product Media</span>
 
-                                Upload Files
-                            </div>
-                            <span>Drag and drop images here or click to upload</span>
+                <button type="button" @click="addMedia" ref="dropZoneRef"
+                    class="w-full outline-2 outline-dashed rounded-lg p-5 items-center flex text-black/50 flex-col justify-center gap-1 hover:outline-blue-500"
+                    :class="{ 'outline-blue-500 text-blue-500': isOverDropZone }">
+                    <div class="flex flex-row gap-1 items-center font-semibold">
+                        <PhosphorIconDownloadSimple :size="20" />
+
+                        Upload Files
+                    </div>
+                    <span>Drag and drop images here or click to upload</span>
+                </button>
+
+                <div ref="sortable" class="flex flex-col gap-1">
+                    <div :key="index" v-for="file, index in media"
+                        class="flex flex-row items-center gap-3 p-2 border rounded-lg w-full shadow">
+                        <button type="button" class="hover:cursor-grab active:cursor-grabbing">
+                            <PhosphorIconDotsSixVertical :size="24" />
                         </button>
 
-                        <div ref="sortable" class="flex flex-col gap-1">
-                            <div :key="index" v-for="file, index in value"
-                                class="flex flex-row items-center gap-3 p-2 border rounded-lg w-full shadow">
-                                <button type="button" class="hover:cursor-grab active:cursor-grabbing">
-                                    <PhosphorIconDotsSixVertical :size="24" />
-                                </button>
+                        <div class="bg-primary w-12 aspect-square rounded bg-cover bg-center"
+                            :style="{ backgroundImage: `url('${getURL(file)}')` }"></div>
 
-                                <div class="bg-primary w-12 aspect-square rounded bg-cover bg-center"
-                                    :style="{ backgroundImage: `url('${getURL(file)}')` }"></div>
-
-                                <div class="flex flex-col w-full">
-                                    <span class="text-sm">{{ file.name }}</span>
-                                    <span class="text-xs">{{ formatFileSize(file.size) }}</span>
-                                </div>
-
-                                <div class="flex flex-row items-center gap-2">
-                                    <button type="button">
-                                        <PhosphorIconDotsThree :size="20" />
-                                    </button>
-
-                                    <button @click="deleteImage(file)" type="button">
-                                        <PhosphorIconX :size="20" />
-                                    </button>
-                                </div>
-                            </div>
+                        <div class="flex flex-col w-full">
+                            <span class="text-sm">{{ file.name }}</span>
+                            <span class="text-xs">{{ formatFileSize(file.size) }}</span>
                         </div>
-                    </FormControl>
-                    <FormDescription>
-                        Provide a detailed description of the product. This will help customers understand what the
-                        product is and its features.
-                    </FormDescription>
-                    <FormMessage />
-                </FormItem>
-            </FormField>
+
+                        <div class="flex flex-row items-center gap-2">
+                            <button type="button">
+                                <PhosphorIconDotsThree :size="20" />
+                            </button>
+
+                            <button @click="deleteImage(file)" type="button">
+                                <PhosphorIconX :size="20" />
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
 
             <!-- Has Variants? -->
-            <FormField v-slot="{ componentField, value, handleChange }" name="hasVariants">
-                <FormItem>
-                    <FormLabel>Variants</FormLabel>
-                    <FormControl>
-                        <div class="flex flex-row p-5 gap-3 border shadow rounded-lg">
-                            <Switch :checked="value" @update:checked="handleChange" />
+            <div class="flex flex-col w-full gap-1">
+                <span class="font-medium">Variants</span>
+                <div class="flex flex-row p-5 gap-3 border shadow rounded-lg">
+                    <Switch :checked="productStore.create.forms.details.hasVariants"
+                        @update:checked="(val) => productStore.create.forms.details.hasVariants = val" />
 
-                            <div class="flex flex-col gap-1">
-                                <span class="font-medium">This is a product with variants</span>
-                                <span class="text-sm text-black/80">When unchecked a default variant shall be created
-                                    for you!</span>
-                            </div>
-                        </div>
-                    </FormControl>
+                    <div class="flex flex-col gap-1">
+                        <span class="font-medium">This is a product with variants</span>
+                        <span class="text-sm text-black/80">When unchecked a default variant shall be created
+                            for you!</span>
+                    </div>
+                </div>
 
-                    <FormMessage />
-                </FormItem>
-            </FormField>
+            </div>
 
-            {{ form.values }}
             <!-- Variant Options -->
-            <div v-if="form.values.hasVariants">
+            <div v-if="productStore.create.forms.details.hasVariants">
                 <div class="flex flex-col gap-3">
                     <div class="flex flex-row items-center justify-between">
                         <div class="flex flex-col">
@@ -113,12 +96,16 @@
                                 etc.</span>
                         </div>
                         <button type="button"
-                            @click="form.setFieldValue('variantOptions', [...form.values.variantOptions, { name: '', values: [] }])"
+                            @click="v$.variantOptions.$model.push({ name: '', values: [] })"
                             class="text-white bg-primary text-sm px-4 p-1 rounded">Add</button>
                     </div>
 
+                    <div class="input-errors flex flex-col" v-for="error of v$.variantOptions.$errors" :key="error.$uid">
+                        <div class="flex flex-row text-xs p-2 rounded text-red-500 font-medium bg-red-500/10 border border-red-500 items-center gap-1"> <PhosphorIconWarningDiamond :size="16" /> {{ error.$message }}</div>
+                    </div>
+
                     <div class="flex flex-col gap-2">
-                        <div v-for="option in form.values.variantOptions"
+                        <div v-for="option in v$.variantOptions.$model"
                             class="border shadow w-full rounded-lg p-3 flex flex-row items-center gap-1">
                             <div class="flex flex-col gap-1 w-full">
                                 <Input type="text" v-model="option.name" placeholder="Property name e.g color" />
@@ -136,7 +123,8 @@
                                         :placeholder="option.values.length ? 'Enter option' : 'Red, Green, Blue (use commas to seperate)'" />
                                 </TagsInput>
                             </div>
-                            <button type="button" @click="form.setFieldValue('variantOptions', form.values.variantOptions.filter(opt => opt !== option))">
+                            <button type="button"
+                                @click=" v$.variantOptions.$model = v$.variantOptions.$model.filter(opt => opt !== option)">
                                 <PhosphorIconX :size="18" />
                             </button>
                         </div>
@@ -144,68 +132,33 @@
                 </div>
             </div>
 
-
             <!-- Variants -->
-            <FormField v-if="form.values.hasVariants" v-slot="{ value }" name="variants">
-                <FormMessage />
+            <div v-if="productStore.create.forms.details.hasVariants && productStore.create.forms.details.variantOptions.filter((option) => option.name.length > 0 && option.values.length > 0).length > 0" class="flex flex-col gap-2">
+                <div class="flex flex-col">
+                    <span class="font-medium">Product Variants</span>
+                </div>
+                <div class="input-errors flex flex-col" v-for="error of v$.variants.$errors" :key="error.$uid">
+                    <div class="flex flex-row text-xs p-2 rounded text-red-500 font-medium bg-red-500/10 border border-red-500 items-center gap-1"> <PhosphorIconWarningDiamond :size="16" /> {{ error.$message }}</div>
+                </div>
                 <VariantTable
-                    v-if="form.values.variantOptions.filter((option) => option.name.length > 0 && option.values.length > 0).length > 0"
-                    @update:selected="(val) => form.setFieldValue('variants', val)"
-                    :variant-options="form.values.variantOptions.filter((option) => option.name.length > 0 && option.values.length > 0)" />
-            </FormField>
-        </form>
+                    
+                    @update:selected="(val) => v$.variants.$model = val"
+                    :variant-options="productStore.create.forms.details.variantOptions.filter((option) => option.name.length > 0 && option.values.length > 0)" />
+            </div>
+        </div>
 
     </div>
 </template>
 
 <script setup>
-import { useForm } from 'vee-validate';
-import { toTypedSchema } from '@vee-validate/zod'
 import VariantTable from './VariantTable.vue';
-
-import { useVuelidate } from '@vuelidate/core'
-import { required, email } from '@vuelidate/validators'
-
-
-import * as z from 'zod';
+import { useProductStore } from '@/stores/product';
 
 const props = defineProps(['formValues']);
 const emits = defineEmits(['update:formValues', 'complete']);
+const productStore = useProductStore();
 
-const selection = ref([])
 
-
-const formSchema = toTypedSchema(z.object({
-    name: z.string().min(2).max(50),
-    description: z.string().max(500),
-    media: z.array(z.instanceof(File)).default([]).optional(),
-    hasVariants: z.boolean(),
-    variantOptions: z.array(z.object({ name: z.string(), values: z.array(z.string()).max(50) })),
-    variants: z.array(z.any()).min(1, 'Atleast 1 variant is required!').default([{ options: [], price: 0, stock: 0, allowBackOrder: false, manageInventory: false, media: [], thumb: null }]),
-}));
-
-const form = useForm({
-    validationSchema: formSchema,
-    initialValues: props.formValues,
-});
-
-function validateForm() {
-    form.validate();
-    if (form.meta.value.valid) {
-        emits('update:formValues', form.values);
-        emits('complete');
-    }
-}
-
-function onSubmit(values) {
-    console.log(values);
-}
-
-// Expose the `validateForm` method
-defineExpose({
-    validateForm,
-    form
-});
 
 // file management
 import { useDropZone } from '@vueuse/core'
@@ -215,18 +168,18 @@ const dropZoneRef = ref();
 const sortable = ref();
 const media = computed({
     get() {
-        return form.values.media;
+        return productStore.create.forms.details.media;
     },
     set(value) {
-        form.setFieldValue('media', value);
+        productStore.create.forms.details.media = value;
     }
 });
 
-useSortable(sortable, media, { animation: 150 });
+useSortable(sortable, productStore.create.forms.details.media, { animation: 150 });
 
 function onDrop(files) {
     console.log(files);
-    form.setFieldValue('media', [...form.values.media, ...files]);
+    media.value = [...media.value, ...files];
     // called when files are dropped on zone
 }
 
@@ -262,8 +215,29 @@ function getURL(file) {
 }
 
 function deleteImage(file) {
-    form.setFieldValue('media', form.values.media.filter((f) => f !== file));
+    media.value = media.value.filter((f) => f !== file);
     URL.revokeObjectURL(file);
 }
+
+// Validation
+
+import { useVuelidate } from '@vuelidate/core';
+import { required, minLength, helpers } from '@vuelidate/validators';
+
+const rules = computed(() => {
+    return {
+        name: {
+            required: helpers.withMessage('Please enter a product name', required),
+        },
+        variantOptions: productStore.create.forms.details.hasVariants ? { required: helpers.withMessage('Atleast one option is required to create a variant!', required) } : {},
+        variants: productStore.create.forms.details.hasVariants ? { required: helpers.withMessage('Please select atleast 1 variant!', required), minLength: minLength(1) } : {}
+    }
+})
+
+const v$ = useVuelidate(rules, productStore.create.forms.details);
+
+defineExpose({
+    validator: v$
+})
 
 </script>

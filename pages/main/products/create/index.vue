@@ -2,40 +2,72 @@
     <div class="flex flex-col w-full h-[100dvh] p-3 bg-black/20">
         <div class="flex flex-col w-full h-full rounded-lg bg-white border shadow">
             <div class="flex flex-row w-full border-b divide-x">
-                <button :disabled="currentStage === 'PUSH'" class="flex flex-row items-center gap-3 p-3">
-                    <PhosphorIconX :size="18" />
+                <Dialog>
+                    <DialogTrigger>
+                        <button :disabled="lock" class="flex flex-row items-center gap-3 p-3">
+                            <PhosphorIconX :size="18" />
+        
+                            <span class="bg-black/5 border text-black/50 px-2 p-1 text-sm shadow rounded">esc</span>
+                        </button>
+                    </DialogTrigger>
 
-                    <span class="bg-black/5 border text-black/50 px-2 p-1 text-sm shadow rounded">esc</span>
-                </button>
+                    <DialogContent>
+                        <DialogHeader class="text-left">
+                            <DialogTitle>Are you sure you want to leave this form?</DialogTitle>
+                            <DialogDescription>You have unsaved changes that will be lost if you exit this form.</DialogDescription>
+                        </DialogHeader>
 
+                        <DialogFooter class="flex flex-row gap-2 justify-end">
+                            <DialogClose class="w-full lg:w-fit"><button class="bg-[#fafafa] hover:bg-black/5 w-full md:w-fit px-4 p-1 rounded shadow border">Cancel</button></DialogClose>
+                            <button @click="exitForm" class="bg-primary font-medium text-white w-full whitespace-nowrap md:w-fit px-4 p-1 rounded shadow border">Exit Form</button>
+                        </DialogFooter>
 
-                <button @click="switchTo('DETAILS')" :disabled="currentStage === 'PUSH'" class="disabled:opacity-50 flex flex-row items-center gap-1 text-black/50 p-3 bg-[#FAFAFA] hover:bg-black/5 w-44" :class="{ '!bg-white hover:bg-white' : currentStage === 'DETAILS' }">
-                    <PhosphorIconCircleHalf weight="fill" class="text-blue-500" v-if="currentStage === 'DETAILS'" :size="18" />
-                    <PhosphorIconCircleDashed v-else :size="18" />
+                    </DialogContent>
+                </Dialog>
 
-                    Details
-                </button>
+                <div class="hidden lg:flex flex-row divide-x">
+                    <button @click="switchTo('DETAILS')" :disabled="lock" class="disabled:opacity-50 flex flex-row items-center gap-1 text-black/50 p-3 bg-[#FAFAFA] hover:bg-black/5 w-44" :class="{ '!bg-white hover:bg-white' : currentStage === 'DETAILS' }">
+                        <PhosphorIconCircleHalf weight="fill" class="text-blue-500" v-if="currentStage === 'DETAILS'" :size="18" />
+                        <PhosphorIconCircleDashed v-else :size="18" />
+    
+                        Details
+                    </button>
+    
+                    <button @click="switchTo('CATEGORIZATION')" :disabled="lock" class="disabled:opacity-50 flex flex-row items-center gap-1 text-black/50 p-3 bg-[#FAFAFA] hover:bg-black/5 w-44" :class="{ '!bg-white hover:bg-white' : currentStage === 'CATEGORIZATION' }">
+                        <PhosphorIconCircleHalf weight="fill" class="text-blue-500" v-if="currentStage === 'CATEGORIZATION'" :size="18" />
+                        <PhosphorIconCircleDashed v-else :size="18" />
+    
+                        Categorization
+                    </button>
+    
+                    <button @click="switchTo('VARIANTS')" :disabled="lock" class="disabled:opacity-50 flex flex-row items-center gap-1 text-black/50 p-3 bg-[#FAFAFA] hover:bg-black/5 w-44" :class="{ '!bg-white hover:bg-white' : currentStage === 'VARIANTS' }">
+                        <PhosphorIconCircleHalf weight="fill" class="text-blue-500" v-if="currentStage === 'VARIANTS'" :size="18" />
+                        <PhosphorIconCircleDashed v-else :size="18" />
+    
+                        Variants
+                    </button>
+    
+                    <button @click="switchTo('PUSH')" class="flex flex-row items-center gap-1 text-black/50 p-3 bg-[#FAFAFA] hover:bg-black/5 w-44" :class="{ '!bg-white hover:bg-white' : currentStage === 'PUSH' }">
+                        <PhosphorIconSpinner weight="regular" class="text-blue-500 animate-spin" v-if="currentStage === 'PUSH' && lock" :size="18" />
+                        <PhosphorIconCircleHalf weight="fill" class="text-blue-500" v-if="currentStage === 'PUSH' && !lock" :size="18" />
+                        <PhosphorIconCircleDashed v-else :size="18" />
+    
+                        Uploading
+                    </button>
+                </div>
 
-                <button @click="switchTo('CATEGORIZATION')" :disabled="currentStage === 'PUSH'" class="disabled:opacity-50 flex flex-row items-center gap-1 text-black/50 p-3 bg-[#FAFAFA] hover:bg-black/5 w-44" :class="{ '!bg-white hover:bg-white' : currentStage === 'CATEGORIZATION' }">
-                    <PhosphorIconCircleHalf weight="fill" class="text-blue-500" v-if="currentStage === 'CATEGORIZATION'" :size="18" />
-                    <PhosphorIconCircleDashed v-else :size="18" />
+                <div class="flex lg:hidden items-center p-3 gap-3 text-black/50 text-sm flex-row">
+                    <div class="flex flex-row gap-1">
+                        <button @click="prev()" :disabled="lock || currentStage === 'DETAILS'" class="disabled:opacity-50">
+                            <PhosphorIconCaretLeft :size="20" />
+                        </button>
+                        <button @click="next()" :disabled="lock || currentStage === 'PUSH'" class="disabled:opacity-50">
+                            <PhosphorIconCaretRight :size="20" />
+                        </button>
+                    </div>
+                    <span>Step {{ stepIndex }} of 4</span>
+                </div>
 
-                    Categorization
-                </button>
-
-                <button @click="switchTo('VARIANTS')" :disabled="currentStage === 'PUSH'" class="disabled:opacity-50 flex flex-row items-center gap-1 text-black/50 p-3 bg-[#FAFAFA] hover:bg-black/5 w-44" :class="{ '!bg-white hover:bg-white' : currentStage === 'VARIANTS' }">
-                    <PhosphorIconCircleHalf weight="fill" class="text-blue-500" v-if="currentStage === 'VARIANTS'" :size="18" />
-                    <PhosphorIconCircleDashed v-else :size="18" />
-
-                    Variants
-                </button>
-
-                <button v-if="currentStage === 'PUSH'" class="flex flex-row items-center gap-1 text-black/50 p-3 bg-[#FAFAFA] hover:bg-black/5 w-44" :class="{ '!bg-white hover:bg-white' : currentStage === 'PUSH' }">
-                    <PhosphorIconSpinner weight="regular" class="text-blue-500 animate-spin" v-if="currentStage === 'PUSH'" :size="18" />
-                    <PhosphorIconCircleDashed v-else :size="18" />
-
-                    Uploading
-                </button>
             </div>
 
             <!-- Main Body -->
@@ -44,18 +76,14 @@
                     <CreateProductDetails v-show="currentStage === 'DETAILS'" ref="detailsForm" @complete="nextForm" :form-values="forms.details" @update:formValues="(val) => { forms.details = val; forms.variants.variants = forms.details.variants }" />
                     <CreateProductCategorization v-show="currentStage === 'CATEGORIZATION'" ref="categorizationForm" @complete="nextForm" :form-values="forms.categorization" @update:formValues="(val) => forms.categorization = val" />
                     <CreateProductVariants v-show="currentStage === 'VARIANTS'" ref="variantsForm" @complete="nextForm" :form-values="forms" @update:formValues="(val) => forms.variants = val" />
-                        
-                    <div v-show="currentStage === 'PUSH'" class="flex gap-1 flex-col w-full h-full items-center justify-center">
-                        <span>Creating Product Please Wait!</span>
-                        <div class="w-[500px] h-1 bg-black/10 rounded"></div>
-                        {{ productStore.create.forms }}
-                    </div>
+                    <PushProduct v-show="currentStage === 'PUSH'" @upload-started="lock = true" @upload-finished="lock = false" />
+                    
                 </div>
             </div>
 
             <div class="border-t p-3 flex flex-row gap-2 items-center justify-end">
                 <button v-wave class="px-4 p-1 bg-[#fafafa] hover:bg-black/5 shadow border text-black text-sm rounded">Cancel</button>
-                <button v-wave class="px-4 p-1 bg-primary text-white text-sm rounded">Save as draft</button>
+                <button @click="save" v-wave class="px-4 p-1 bg-primary text-white text-sm rounded">Save as draft</button>
                 <button v-wave class="px-4 p-1 bg-primary text-white text-sm rounded" @click="next">{{ currentStage === 'VARIANTS' ? 'Finish' : 'Next'  }}</button>
             </div>
         </div>
@@ -67,11 +95,13 @@
 import CreateProductDetails from '@/components/Forms/Products/Create/CreateProductDetails.vue';
 import CreateProductCategorization from '~/components/Forms/Products/Create/CreateProductCategorization.vue';
 import CreateProductVariants from '~/components/Forms/Products/Create/CreateProductVariants.vue';
+import PushProduct from '@/components/Forms/Products/Create/PushProduct.vue';
+
 import { getProducts } from '~/services/products';
 
 import { mapStores } from 'pinia';
 import { useProductStore } from '~/stores/product';
-
+import { toast } from 'vue-sonner'
 
 definePageMeta({
     breadcrumbs: [{
@@ -89,41 +119,78 @@ export default {
     data() {
         return {
             page: null,
-            currentStage: 'DETAILS', // DETAILS | CATEGORIZATION | VARIANTS
-            
+            lock: false,
+            currentStage: 'DETAILS', // DETAILS | CATEGORIZATION | VARIANTS            
         }
     },
+    mounted() {
+        
+    },
     methods: {
-        next() {
-
-            if(this.currentStage === 'VARIANTS') {
-                this.currentStage = 'PUSH';
-                return;
+        toast,
+        save() {
+            this.productStore.saved.create = {...this.productStore.create};
+            console.log(this.productStore.saved)
+            toast('Draft Saved!', {});
+        },
+        load() {
+            if (this.productStore.saved.create) {
+                this.productStore.create = { ...this.productStore.saved.create };
             }
-            this.currentForm.validateForm();
+            // this.productStore.saved.create = null;
+
+            toast('Saved Draft has been loaded!', {});
+        },
+        prev() {
+            const stages = ['DETAILS', 'CATEGORIZATION', 'VARIANTS', 'PUSH'];
+            const currentIndex = stages.indexOf(this.currentStage);
+            if (currentIndex > 0) {
+                this.currentStage = stages[currentIndex - 1];
+            }
+        },
+        next() {
+            this.currentForm.validator.$validate();
+            if(this.currentForm.validator.$errors.length === 0) {
+                this.nextForm();
+            } else {
+                console.log(this.currentForm.validator.$errors)
+            }
         },
         nextForm() {
-            if(this.currentForm.form.meta.value.valid) {
-                if(this.currentStage === 'DETAILS') {
+            switch (this.currentStage) {
+                case 'DETAILS':
                     this.currentStage = 'CATEGORIZATION';
-                } else if(this.currentStage === 'CATEGORIZATION') {
+                    break;
+                case 'CATEGORIZATION':
                     this.currentStage = 'VARIANTS';
-                } else if(this.currentStage === 'VARIANTS') {
+                    break;
+                case 'VARIANTS':
                     this.currentStage = 'PUSH';
-                }
+                    break;
+                default:
+                    this.currentStage = 'DETAILS';
             }
         },
+        
         switchTo(stage) {
-            if(this.currentForm.form.meta.value.valid || this.currentStage === 'VARIANTS') {
-                this.currentForm.validateForm();
+            this.currentForm.validator.$validate();
+            if(this.currentForm.validator.$errors.length === 0) {
                 this.currentStage = stage;
             }
+        },
+        exitForm() {
+            this.productStore.resetCreateForms();
+            this.$router.go(-1);
         }
     },
     computed: {
         ...mapStores(useProductStore),
         forms() {
             return this.productStore.create.forms;
+        },
+        stepIndex() {
+            const stages = ['DETAILS', 'CATEGORIZATION', 'VARIANTS', 'PUSH'];
+            return stages.indexOf(this.currentStage) + 1;
         },
         currentForm() {
             switch(this.currentStage) {
@@ -140,13 +207,11 @@ export default {
             }
         }
     },
-    async mounted() {
-        this.page =  await getProducts(1, 10);
-    },
     components: {
         CreateProductDetails,
         CreateProductCategorization,
         CreateProductVariants,
+        PushProduct
     }
 }
 </script>

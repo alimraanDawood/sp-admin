@@ -4,6 +4,7 @@ import { TagsInput, TagsInputInput, TagsInputItem, TagsInputItemDelete, TagsInpu
 import { ComboboxAnchor, ComboboxContent, ComboboxInput, ComboboxPortal, ComboboxRoot } from 'radix-vue'
 import { computed, ref } from 'vue'
 import { getProductGroups } from '~/services/products';
+
 const groups = await getProductGroups();
 
 const props = defineProps(['groups']);
@@ -20,7 +21,7 @@ const modelValue = computed({
 const open = ref(false)
 const searchTerm = ref('')
 
-const filteredGroups = computed(() => groups.filter(i => !modelValue.value.includes(i.name)))
+const filteredGroups = computed(() => groups.filter(i => !modelValue.value.includes(i)))
 </script>
 
 <template>

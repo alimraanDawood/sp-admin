@@ -14,27 +14,39 @@
             </div>
 
             <div class="flex flex-col h-full gap-1 p-3">
-                <button v-wave @click="$router.push('/main/products/')" class="flex flex-row w-full items-center text-black/80 p-2 rounded py-1 text-sm gap-2 transition-all duration-300 ease-in-out hover:bg-black/5" :class="{ 'bg-white shadow hover:bg-white' : current === 'Products' }">
+                <button v-wave @click="jumpTo('/main/products/')" class="flex flex-row w-full items-center text-black/80 p-2 rounded py-1 text-sm gap-2 transition-all duration-300 ease-in-out hover:bg-black/5" :class="{ 'bg-white shadow hover:bg-white' : current === 'Products' }">
                     <PhosphorIconTag :size="18" />
                     Products
                 </button>
 
-                <button v-wave @click="$router.push('/main/products/')" class="flex flex-row w-full items-center text-black/80 p-2 rounded py-1 text-sm gap-2 transition-all duration-300 ease-in-out hover:bg-black/5" :class="{ 'bg-white shadow hover:bg-white' : current === 'Orders' }">
+                <div v-if="current?.includes('Products')" class="flex flex-col gap-1">
+                    <button v-wave @click="jumpTo('/main/products/groups/')" class="flex flex-row w-full items-center text-black/80 p-2 rounded py-1 text-sm gap-2 transition-all duration-300 ease-in-out hover:bg-black/5" :class="{ 'bg-white shadow hover:bg-white' : current === 'Products-Groups' }">
+                        <PhosphorIconTag class="opacity-0" :size="18" />
+                        Product Groups
+                    </button>
+
+                    <button v-wave @click="jumpTo('/main/products/tags/')" class="flex flex-row w-full items-center text-black/80 p-2 rounded py-1 text-sm gap-2 transition-all duration-300 ease-in-out hover:bg-black/5" :class="{ 'bg-white shadow hover:bg-white' : current === 'Products-Tags' }">
+                        <PhosphorIconTag class="opacity-0" :size="18" />
+                        Product Tags
+                    </button>
+                </div>
+
+                <button v-wave @click="jumpTo('/main/products/')" class="flex flex-row w-full items-center text-black/80 p-2 rounded py-1 text-sm gap-2 transition-all duration-300 ease-in-out hover:bg-black/5" :class="{ 'bg-white shadow hover:bg-white' : current === 'Orders' }">
                     <PhosphorIconShoppingCart :size="18" />
                     Orders
                 </button>
 
-                <button v-wave @click="$router.push('/main/products/')" class="flex flex-row w-full items-center text-black/80 p-2 rounded py-1 text-sm gap-2 transition-all duration-300 ease-in-out hover:bg-black/5" :class="{ 'bg-white shadow hover:bg-white' : current === 'Inventory' }">
+                <button v-wave @click="jumpTo('/main/products/')" class="flex flex-row w-full items-center text-black/80 p-2 rounded py-1 text-sm gap-2 transition-all duration-300 ease-in-out hover:bg-black/5" :class="{ 'bg-white shadow hover:bg-white' : current === 'Inventory' }">
                     <PhosphorIconStorefront :size="18" />
                     Inventory
                 </button>
 
-                <button v-wave @click="$router.push('/main/products/')" class="flex flex-row w-full items-center text-black/80 p-2 rounded py-1 text-sm gap-2 transition-all duration-300 ease-in-out hover:bg-black/5" :class="{ 'bg-white shadow hover:bg-white' : current === 'Customers' }">
+                <button v-wave @click="jumpTo('/main/products/')" class="flex flex-row w-full items-center text-black/80 p-2 rounded py-1 text-sm gap-2 transition-all duration-300 ease-in-out hover:bg-black/5" :class="{ 'bg-white shadow hover:bg-white' : current === 'Customers' }">
                     <PhosphorIconUsersThree :size="18" />
                     Customers
                 </button>
 
-                <button v-wave @click="$router.push('/main/products/')" class="flex flex-row w-full items-center text-black/80 p-2 rounded py-1 text-sm gap-2 transition-all duration-300 ease-in-out hover:bg-black/5" :class="{ 'bg-white shadow hover:bg-white' : current === 'Promotions' }">
+                <button v-wave @click="jumpTo('/main/products/')" class="flex flex-row w-full items-center text-black/80 p-2 rounded py-1 text-sm gap-2 transition-all duration-300 ease-in-out hover:bg-black/5" :class="{ 'bg-white shadow hover:bg-white' : current === 'Promotions' }">
                     <PhosphorIconTicket :size="18" />
                     Promotions
                 </button>
@@ -42,8 +54,8 @@
             </div>
 
             <div class="flex flex-col  gap-1 p-3 ">
-                <button v-wave @click="$router.push('/main/products/')" class="flex flex-row w-full items-center text-black/80 p-2 rounded py-1 text-sm gap-2 transition-all duration-300 ease-in-out hover:bg-black/5" :class="{ 'bg-white shadow hover:bg-white' : current === 'Promotions' }">
-                    <PhosphorIconTicket :size="18" />
+                <button v-wave @click="jumpTo('/main/products/')" class="flex flex-row w-full items-center text-black/80 p-2 rounded py-1 text-sm gap-2 transition-all duration-300 ease-in-out hover:bg-black/5" :class="{ 'bg-white shadow hover:bg-white' : current === 'Promotions' }">
+                    <PhosphorIconGear :size="18" />
                     Settings
                 </button>
 
@@ -69,7 +81,7 @@
     </div>
 
     <XyzTransition mode="out-in">
-        <div v-if="!$viewport.isGreaterThan('tablet') && isMobileOpen" class="flex flex-col p-3 fixed top-0 left-0 h-[100dvh] w-screen ">
+        <div v-if="!$viewport.isGreaterThan('tablet') && isMobileOpen" class="flex flex-col z-10 p-3 fixed top-0 left-0 h-[100dvh] w-screen ">
             <div xyz="fade" class="xyz-nested bg-black/70 z-10 fixed top-0 left-0 w-full h-full" @click="isMobileOpen = false"></div>
             <div xyz="fade left" class="xyz-nested max-w-[356px] w-[85vw] bg-[#FAFAFA] overflow-hidden h-full p-1 rounded-xl z-30">
                 <ReuseTemplate />
@@ -87,11 +99,18 @@ import { createReusableTemplate } from '@vueuse/core'
 
 const [DefineTemplate, ReuseTemplate] = createReusableTemplate();
 
-const props = defineProps(['current', 'expanded']);
-const emits = defineEmits(['update:expanded']);
+const props = defineProps(['current', 'expanded', 'mobileOpen']);
+const emits = defineEmits(['update:expanded', 'update:mobileOpen']);
 
 const isMobileOpen = computed({
-    get() { return props.expanded },
-    set(value) { emits('update:expanded', value) }
-})
+    get() { return props.mobileOpen },
+    set(value) { emits('update:mobileOpen', value) }
+});
+
+const $router = useRouter();
+
+function jumpTo(route) {
+    $router.push(route);
+    isMobileOpen.value = false; // close mobile sidebar
+}
 </script>

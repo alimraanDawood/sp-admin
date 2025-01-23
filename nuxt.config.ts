@@ -12,6 +12,7 @@ export default defineNuxtConfig({
     'v-wave/nuxt',
     '@pinia/nuxt',
     'nuxt-viewport',
+    'pinia-plugin-persistedstate',
   ],
 
   plugins: [

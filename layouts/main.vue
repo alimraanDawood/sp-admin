@@ -1,12 +1,12 @@
 <template>
-    <div class="flex flex-row w-screen h-[100dvh] bg-[#FAFAFA]">
+    <div class="flex flex-row w-screen h-[100dvh] overflow-hidden bg-[#FAFAFA]">
         <div class="flex flex-col h-full border-r" >
-            <Sidebar v-model:expanded="expanded" :current="$route.meta.sidebarLink" />
+            <Sidebar v-model:expanded="expanded" v-model:mobileOpen="mobileOpen" :current="$route.meta.sidebarLink" />
         </div>
 
         <div class="flex flex-col h-full w-full">
             <div class="flex flex-row w-full items-center p-3 border-b gap-3" >
-                <button @click="expanded = !expanded">
+                <button @click="toggleSidebar">
                     <PhosphorIconSidebarSimple :size="24" />
                 </button>
 
@@ -29,7 +29,7 @@
 
             </div>
 
-            <div class="flex flex-col w-full h-full">
+            <div class="flex flex-col w-full overflow-y-scroll h-full">
                 <slot />
             </div>
         </div>
@@ -41,7 +41,8 @@ import Sidebar from '~/components/Sidebar/Sidebar.vue';
 export default {
     data() {
         return { 
-            expanded: true && this.$viewport.isGreaterThan('tablet')
+            expanded: true && this.$viewport.isGreaterThan('tablet'),
+            mobileOpen: false,
         }
     },
     components: {
@@ -50,6 +51,15 @@ export default {
     computed: {
         breadcrumbs() {
             return this.$route.meta.breadcrumbs;
+        }
+    },
+    methods: {
+        toggleSidebar() {
+            if(this.$viewport.isGreaterThan('tablet')) {
+                this.expanded = !this.expanded;
+            } else {
+                this.mobileOpen = !this.mobileOpen;
+            }
         }
     }
 }
