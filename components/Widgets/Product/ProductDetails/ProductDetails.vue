@@ -106,8 +106,6 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 
-import { Input } from '@/components/ui/Input';
-import { Textarea } from '@/components/ui/Textarea';
 
 import { useVuelidate } from '@vuelidate/core';
 import { required, minLength, helpers } from '@vuelidate/validators';
@@ -150,7 +148,6 @@ export default {
         SheetHeader,
         SheetTitle,
         SheetTrigger,
-        Input
     },
     methods: {
         openEditForm() {
