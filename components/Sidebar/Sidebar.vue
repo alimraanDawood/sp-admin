@@ -62,11 +62,11 @@
                 </button>
 
                 <div class="flex flex-row p-2 py-1 items-center gap-3">
-                    <div class=" bg-white border-2 border-black/10 rounded-lg grid place-items-center w-8 text-sm aspect-square">
-                        <span>A</span>
+                    <div class=" bg-white border-2 border-black/10 rounded-lg grid place-items-center w-8 text-sm aspect-square bg-center bg-cover" >
+                        <span >{{ signedInAdmin.name[0] }}</span>
                     </div>
     
-                    <span class="w-full text-sm">Al-imraan Dawood</span>
+                    <span class="w-full text-sm">{{ signedInAdmin.name }}</span>
     
                     <button>
                         <PhosphorIconDotsThree :size="24" />
@@ -103,6 +103,10 @@ const [DefineTemplate, ReuseTemplate] = createReusableTemplate();
 
 const props = defineProps(['current', 'expanded', 'mobileOpen']);
 const emits = defineEmits(['update:expanded', 'update:mobileOpen']);
+
+import { signedInAdmin } from '@/services/auth';
+import { getFileUrl } from '@/services/utils';
+
 
 const isMobileOpen = computed({
     get() { return props.mobileOpen },

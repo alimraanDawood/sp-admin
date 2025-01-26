@@ -1,5 +1,5 @@
 import Pocketbase from 'pocketbase';
-
+import { type RecordModel } from 'pocketbase';
 const pocketbase  = new Pocketbase("https://sports-palace.pockethost.io");
 
 export async function signUp(options : any) {
@@ -31,3 +31,5 @@ export async function signUpWithGoogle() {
         throw(e);
     }
 }
+
+export const signedInAdmin = pocketbase.authStore.record as RecordModel;
