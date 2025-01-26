@@ -18,7 +18,7 @@ import { getFileUrl } from '~/services/utils';
 definePageMeta({
     layout: 'main',
     breadcrumbs: [{
-        label: 'Products',
+        label: 'Product Groups',
         link: '/main/products/'
     },
     {
@@ -41,7 +41,7 @@ export default {
         // update the route info
         if (this.group) {
             this.$route.meta.breadcrumbs = [{
-                label: 'Groups',
+                label: 'Product Groups',
                 link: '/main/products/groups/'
             },
             {
@@ -62,7 +62,7 @@ export default {
         if (this.group) {
             this.$route.meta.breadcrumbs = [{
                 label: 'Groups',
-                link: '/main/groups/'
+                link: '/main/products/groups/'
             },
             {
                 label: this.group.name,

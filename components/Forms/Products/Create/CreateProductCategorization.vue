@@ -28,7 +28,7 @@
                     </div>
 
                     <div class="flex flex-col gap-2 w-full">
-                        <SelectTags :tags="productStore.create.forms.categorization.tags" @update:group="(val) => productStore.create.forms.categorization.tags = val" />
+                        <SelectTags :tags="productStore.create.forms.categorization.tags" @update:tags="(val) => productStore.create.forms.categorization.tags = val" />
                     </div>
                 </div>
             </div>

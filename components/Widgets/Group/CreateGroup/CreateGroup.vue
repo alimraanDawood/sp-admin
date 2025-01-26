@@ -9,12 +9,12 @@
         </SheetTrigger>
         <SheetContent :side="$viewport.isGreaterThan('tablet') ? 'right' : 'bottom' ">
             <SheetHeader>
-                <SheetTitle>Edit Group</SheetTitle>
+                <SheetTitle>Create Group</SheetTitle>
             </SheetHeader>
 
             <div class="flex flex-col w-full gap-5 p-3">
                 <div class="flex flex-col gap-1">
-                    <span>Product Name</span>
+                    <span>Group Name</span>
                     <Input v-model="v$.editForm.values.name.$model" />
                     <div class="input-errors flex flex-col mt-1" v-for="error of v$.editForm.values.name.$errors"
                         :key="error.$uid">
@@ -26,12 +26,12 @@
                 </div>
 
                 <div class="flex flex-col gap-1">
-                    <span>Product Description (optional)</span>
+                    <span>Group Description (optional)</span>
                     <Textarea v-model="editForm.values.description" />
                 </div>
 
                 <div class="flex flex-col gap-1">
-                    <span>Product Cover</span>
+                    <span>Cover Image</span>
                     <div v-if="typeof v$.editForm.values.cover.$model === typeof ''"
                         class="flex flex-row p-2 border rounded-lg">
                         <div class="flex flex-col w-12 bg-primary aspect-square rounded bg-cover bg-center"

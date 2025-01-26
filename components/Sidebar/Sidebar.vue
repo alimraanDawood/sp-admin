@@ -24,14 +24,9 @@
                         <PhosphorIconTag class="opacity-0" :size="18" />
                         Product Groups
                     </button>
-
-                    <button v-wave @click="jumpTo('/main/products/tags/')" class="flex flex-row w-full items-center text-black/80 p-2 rounded py-1 text-sm gap-2 transition-all duration-300 ease-in-out hover:bg-black/5" :class="{ 'bg-white shadow hover:bg-white' : current === 'Products-Tags' }">
-                        <PhosphorIconTag class="opacity-0" :size="18" />
-                        Product Tags
-                    </button>
                 </div>
 
-                <button v-wave @click="jumpTo('/main/products/')" class="flex flex-row w-full items-center text-black/80 p-2 rounded py-1 text-sm gap-2 transition-all duration-300 ease-in-out hover:bg-black/5" :class="{ 'bg-white shadow hover:bg-white' : current === 'Orders' }">
+                <button v-wave @click="jumpTo('/main/orders/')" class="flex flex-row w-full items-center text-black/80 p-2 rounded py-1 text-sm gap-2 transition-all duration-300 ease-in-out hover:bg-black/5" :class="{ 'bg-white shadow hover:bg-white' : current === 'Orders' }">
                     <PhosphorIconShoppingCart :size="18" />
                     Orders
                 </button>
@@ -41,10 +36,17 @@
                     Inventory
                 </button>
 
-                <button v-wave @click="jumpTo('/main/products/')" class="flex flex-row w-full items-center text-black/80 p-2 rounded py-1 text-sm gap-2 transition-all duration-300 ease-in-out hover:bg-black/5" :class="{ 'bg-white shadow hover:bg-white' : current === 'Customers' }">
+                <button v-wave @click="jumpTo('/main/customers/')" class="flex flex-row w-full items-center text-black/80 p-2 rounded py-1 text-sm gap-2 transition-all duration-300 ease-in-out hover:bg-black/5" :class="{ 'bg-white shadow hover:bg-white' : current === 'Customers' }">
                     <PhosphorIconUsersThree :size="18" />
                     Customers
                 </button>
+
+                <div v-if="current?.includes('Customers')" class="flex flex-col gap-1">
+                    <button v-wave @click="jumpTo('/main/customers/groups/')" class="flex flex-row w-full items-center text-black/80 p-2 rounded py-1 text-sm gap-2 transition-all duration-300 ease-in-out hover:bg-black/5" :class="{ 'bg-white shadow hover:bg-white' : current === 'Customers-Groups' }">
+                        <PhosphorIconTag class="opacity-0" :size="18" />
+                        Customer Groups
+                    </button>
+                </div>
 
                 <button v-wave @click="jumpTo('/main/products/')" class="flex flex-row w-full items-center text-black/80 p-2 rounded py-1 text-sm gap-2 transition-all duration-300 ease-in-out hover:bg-black/5" :class="{ 'bg-white shadow hover:bg-white' : current === 'Promotions' }">
                     <PhosphorIconTicket :size="18" />

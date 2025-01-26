@@ -1,21 +1,23 @@
 import Pocketbase from 'pocketbase';
 
+const pocketbase = new Pocketbase('https://sports-palace.pockethost.io');
 
-class OrderManager {
-    constructor(private pocketbase : Pocketbase) {
-        this.pocketbase = pocketbase;
-    }
 
-    async getPagedOrders(pageNumber : number, pageSize : number, filter = '') {
-        try {
-            const results = await this.pocketbase.collection('orders').getList(pageNumber, pageSize, { sort: '-created', filter: filter, expand: 'order_items,user,payment_method' });
+export async function getOrders(page : number, numPerPage : number) {
+    try {
+        const order = await pocketbase.collection('Orders').getList(page, numPerPage, { expand: 'customer,orderItems' });
 
-            return results;
-        } catch(e) {
-            throw(e);
-        }
+        return order;
+    } catch(e) {
+        throw(e);
     }
 }
 
-const pb = new Pocketbase('https://sports-palace.pockethost.io/');
-export const orderManager = new OrderManager(pb);
+export async function getOrder(orderId : string) {
+    try {
+        const order = await pocketbase.collection('Orders').getOne(orderId, { expand: 'orderItems,customer' });
+        return order;
+    } catch(e) {
+        throw(e);
+    }
+}

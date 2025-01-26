@@ -1,6 +1,6 @@
 <template>
     <div class="flex flex-col p-3 w-full h-full">
-        Dashboard
+        This page is still under construction. Please check back soon.
     </div>
 </template>
 

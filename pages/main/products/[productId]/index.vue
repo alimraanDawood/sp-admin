@@ -38,8 +38,7 @@
                         <div class="gap-3 grid grid-cols-2 p-5 py-3">
                             <span>Tags</span>
 
-                            <span>{{ product.expand.tags?.length ? product.expand.tags?.map(tag => tag.name).join(', ')
-                                : '-' }}</span>
+                            <span>{{ product.tags.length ? product.tags.split(',').join(', ') : '-' }}</span>
                         </div>
                     </div>
                 </div>

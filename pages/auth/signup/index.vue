@@ -1,17 +1,18 @@
 <template>
-    <div class="flex flex-col h-[100dvh] p-5 items-center  bg-black/10">
-        <div class="bg-white border shadow rounded-lg px-1 w-full max-w-[500px] divide-y">
-            <div class="flex flex-col">
-                <div class="flex flex-col lg:flex-row lg:items-center gap-2 p-3">
-                    <div class="flex flex-col w-full">
-                        <div class="flex flex-row font-semibold items-center gap-1">
-                            <PhosphorIconUser :size="18" class="text-black/70" />
+    <div class="flex flex-col h-[100dvh] w-screen overflow-y-scroll overflow-x-scroll lg:p-5 items-center justify-center  bg-black/10">
+        <div class="bg-white md:border md:shadow h-full md:h-fit md:rounded-lg w-full max-w-[500px] divide-y">
+            <div class="flex flex-row p-3 items-center justify-between rounded-t-xl border bg-[#fafafa]">
+                <button @click="$router.go(-1)" class="text-sm font-medium text-primary">Cancel</button>
 
-                            Profile Information
-                        </div>
-                        <span class="text-sm text-black/70">Enter your details to request for permission!</span>
-                    </div>
+                <div class="flex flex-row gap-1 items-center text-lg font-medium">
+                    <PhosphorIconLock />
+
+                    RoqiaAdmin
                 </div>
+
+                <button @click="resetFields" class="p-2 bg-primary text-white rounded">
+                    <PhosphorIconArrowClockwise :size="20" weight="bold" />
+                </button>
             </div>
 
             <div class="flex flex-col">
@@ -50,7 +51,7 @@
                     <PinInput class="text-sm" id="pin-input" v-model="v$.signUp.phone.$model" placeholder="○"
                         @complete="handleComplete">
                         <PinInputGroup>
-                            <PinInputInput  class="p-1" v-for="(id, index) in 10" :key="id" :index="index" />
+                            <PinInputInput  class="p-0 w-[10%]" v-for="(id, index) in 10" :key="id" :index="index" />
                         </PinInputGroup>
                     </PinInput>
                     <div class="input-errors" v-for="error of v$.signUp.phone.$errors" :key="error.$uid">
@@ -81,9 +82,9 @@
             <div class="flex flex-col w-full p-3">
                 <button @click="signUpAdmin" 
                         :disabled="signUp.loading"
-                        class="disabled:opacity-50 bg-primary font-medium text-white whitespace-nowrap px-4 p-1 rounded shadow w-full">
+                        class="disabled:opacity-50 bg-primary font-medium text-white whitespace-nowrap flex flex-row items-center justify-center px-4 p-1 rounded shadow w-full">
                         <PhosphorIconSpinner v-if="signUp.loading" :size="20" class="animate-spin" />
-                        <span v-else>Submit</span>
+                        <span v-else>Submit Account Request</span>
                     </button>
             </div>
         </div>
@@ -111,12 +112,12 @@ export default {
         return {
             state: 'SIGNUP', // SIGNUP | VERIFICATION
             signUp: {
-                name: 'Al-imraan Dawood',
+                name: '',
                 avatar: null,
-                email: 'alimraandawoodgulam@gmail.com',
-                phone: '0740895974'.split(''),
-                password: 'alimraanD12',
-                passwordConfirm: 'alimraanD12'
+                email: '',
+                phone: '07'.split(''),
+                password: '',
+                passwordConfirm: ''
             }
         }
     },
@@ -137,6 +138,14 @@ export default {
         }
     },
     methods: {
+        resetFields() {
+            this.v$.signUp.$reset();
+            this.signUp.name = '';
+            this.signUp.email = '';
+            this.signUp.phone = '07'.split('');
+            this.signUp.password = '';
+            this.signUp.passwordConfirm = '';
+        },
         createObjectUrl(object) {
             if(object) {
                 return URL.createObjectURL(object);
@@ -163,7 +172,8 @@ export default {
                     const user = await signUp({...this.signUp, phone: this.signUp.phone.join('')});
 
                     if(user) {
-                        toast('Account Request Submitted!')
+                        toast('Account Request Submitted!');
+                        this.$router.push('/auth/verification_pending/')
                     }
                 } catch(e) {
                     console.error(e);

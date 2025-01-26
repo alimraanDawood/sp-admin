@@ -1,6 +1,6 @@
 import Pocketbase from 'pocketbase';
 
-const pocketbase  = new Pocketbase("http://localhost:8090");
+const pocketbase  = new Pocketbase("https://sports-palace.pockethost.io");
 
 export async function getProducts(page : number, numPerPage : number) {
     try {
@@ -90,6 +90,8 @@ export async function getProductTags() {
 }
 
 
+
+
 export async function createProduct(formData : any) {
     // if hasVariants is false skip the creations of options
     try {
@@ -135,7 +137,7 @@ export async function createProduct(formData : any) {
             name: formData.details.name,
             description: formData.details.description,
             groups: [...formData.categorization.groups.map(grp => grp.id)],
-            tags: [...formData.categorization.tags.map(tag => tag.id)],
+            tags: formData.categorization.tags.join(','),
             hasVariants: formData.details.hasVariants,
             variants: variants,
             variantOptions: [...options.map(opt => opt.id)],
