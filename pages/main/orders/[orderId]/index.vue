@@ -2,10 +2,13 @@
     <div class="flex flex-col w-full h-full">
         <div v-if="order !== null" class="grid gap-3 grid-cols-1 p-3 lg:grid-cols-[minmax(0,_1fr)_440px]">
             <div class="flex flex-col gap-3">
+                <OrderDetails :order="order" />
+                <OrderSummary :order="order" />
             </div>
 
-            <div class="flex flex-col w-full">
+            <div class="flex flex-col w-full gap-3">
                 <OrderCustomerDetails :order="order" />
+                <OrderPaymentDetails :order="order" />
             </div>
         </div>
     </div>
@@ -13,6 +16,9 @@
 
 <script>
 import OrderCustomerDetails from '@/components/Widgets/Orders/OrderCustomerDetails/OrderCustomerDetails.vue';
+import OrderDetails from '@/components/Widgets/Orders/OrderDetails/OrderDetails.vue';
+import OrderSummary from '@/components/Widgets/Orders/OrderSummary/OrderSummary.vue';
+import OrderPaymentDetails from '@/components/Widgets/Orders/OrderPaymentDetails/OrderPaymentDetails.vue';
 
 import { getOrder } from '@/services/orders';
 import { getFileUrl } from '~/services/utils';
@@ -74,7 +80,10 @@ export default {
         }
     },
     components: {
-        OrderCustomerDetails
+        OrderCustomerDetails,
+        OrderDetails,
+        OrderSummary,
+        OrderPaymentDetails
     }
 }
 </script>

@@ -43,7 +43,7 @@
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    <TableRow class="cursor-pointer" @click="$router.push(`/main/products/${product.id}`)"
+                    <TableRow class="cursor-pointer" @click="$router.push(`/main/orders/${order.id}`)"
                         v-for="order in customer.expand.orders">
                         <TableCell class="font-medium">
                             <div class="flex flex-row items-center gap-2">

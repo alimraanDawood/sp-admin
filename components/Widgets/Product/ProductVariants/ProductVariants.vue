@@ -34,6 +34,7 @@
                                         <TableHead class="w-[100px]">
                                             {{ options.map(opt => opt.name).join('/') }}
                                         </TableHead>
+                                        <TableHead class="text-right">Cost</TableHead>
                                         <TableHead class="text-right">Price</TableHead>
                                         <TableHead class="text-right">Stock</TableHead>
                                         <TableHead>
@@ -43,8 +44,11 @@
                                 <TableBody>
                                     <TableRow v-for="variant in product.expand.variants">
                                         <TableCell class="font-medium px-4 py-2">
-                                            {{ variant.expand.options?.map(opt => opt.value).join(' / ') }}
+                                            {{ product.hasVariants ? variant.expand?.options?.map(opt => opt.value).join(' / ') : 'DEFAULT' }}
                                         </TableCell>
+                                        <TableCell class="text-right px-4 py-2">{{ variant.cost.toLocaleString('en-UG', {
+                                            style:
+                                            'currency', currency: 'UGX' }) }}</TableCell>
                                         <TableCell class="text-right px-4 py-2">{{ variant.price.toLocaleString('en-UG', {
                                             style:
                                             'currency', currency: 'UGX' }) }}</TableCell>

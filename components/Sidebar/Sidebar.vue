@@ -6,7 +6,7 @@
                     <span>S</span>
                 </div>
 
-                <span class="w-full">Sports Palace</span>
+                <span class="w-full">Roqia Admin</span>
 
                 <button>
                     <PhosphorIconDotsThree :size="24" />
@@ -24,6 +24,11 @@
                         <PhosphorIconTag class="opacity-0" :size="18" />
                         Product Groups
                     </button>
+
+                    <button v-wave @click="jumpTo('/main/products/featured/')" class="flex flex-row w-full items-center text-black/80 p-2 rounded py-1 text-sm gap-2 transition-all duration-300 ease-in-out hover:bg-black/5" :class="{ 'bg-white shadow hover:bg-white' : current === 'Products-Featured' }">
+                        <PhosphorIconTag class="opacity-0" :size="18" />
+                        Featured Groups
+                    </button>
                 </div>
 
                 <button v-wave @click="jumpTo('/main/orders/')" class="flex flex-row w-full items-center text-black/80 p-2 rounded py-1 text-sm gap-2 transition-all duration-300 ease-in-out hover:bg-black/5" :class="{ 'bg-white shadow hover:bg-white' : current === 'Orders' }">
@@ -31,10 +36,10 @@
                     Orders
                 </button>
 
-                <button v-wave @click="jumpTo('/main/products/')" class="flex flex-row w-full items-center text-black/80 p-2 rounded py-1 text-sm gap-2 transition-all duration-300 ease-in-out hover:bg-black/5" :class="{ 'bg-white shadow hover:bg-white' : current === 'Inventory' }">
+                <!-- <button v-wave @click="jumpTo('/main/products/')" class="flex flex-row w-full items-center text-black/80 p-2 rounded py-1 text-sm gap-2 transition-all duration-300 ease-in-out hover:bg-black/5" :class="{ 'bg-white shadow hover:bg-white' : current === 'Inventory' }">
                     <PhosphorIconStorefront :size="18" />
                     Inventory
-                </button>
+                </button> -->
 
                 <button v-wave @click="jumpTo('/main/customers/')" class="flex flex-row w-full items-center text-black/80 p-2 rounded py-1 text-sm gap-2 transition-all duration-300 ease-in-out hover:bg-black/5" :class="{ 'bg-white shadow hover:bg-white' : current === 'Customers' }">
                     <PhosphorIconUsersThree :size="18" />
@@ -48,10 +53,15 @@
                     </button>
                 </div>
 
-                <button v-wave @click="jumpTo('/main/products/')" class="flex flex-row w-full items-center text-black/80 p-2 rounded py-1 text-sm gap-2 transition-all duration-300 ease-in-out hover:bg-black/5" :class="{ 'bg-white shadow hover:bg-white' : current === 'Promotions' }">
+                <button v-wave @click="jumpTo('/main/blog/')" class="flex flex-row w-full items-center text-black/80 p-2 rounded py-1 text-sm gap-2 transition-all duration-300 ease-in-out hover:bg-black/5" :class="{ 'bg-white shadow hover:bg-white' : current === 'Blog' }">
+                    <PhosphorIconNewspaper :size="18" />
+                    Blog
+                </button>
+
+                <!-- <button v-wave @click="jumpTo('/main/products/')" class="flex flex-row w-full items-center text-black/80 p-2 rounded py-1 text-sm gap-2 transition-all duration-300 ease-in-out hover:bg-black/5" :class="{ 'bg-white shadow hover:bg-white' : current === 'Promotions' }">
                     <PhosphorIconTicket :size="18" />
                     Promotions
-                </button>
+                </button> -->
 
             </div>
 

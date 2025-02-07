@@ -25,7 +25,7 @@ definePageMeta({
         label: '',
         link: '/main/products/'
     }],
-    sidebarLink: 'Products'
+    sidebarLink: 'Products-Groups'
 })
 
 export default {

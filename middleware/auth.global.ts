@@ -1,6 +1,6 @@
 import Pocketbase from "pocketbase";
 export default defineNuxtRouteMiddleware((to, from) => {
-  const pb = new Pocketbase("https://sports-palace.pockethost.io");
+  const pb = new Pocketbase("http://localhost:8090");
 
 
   if (pb.authStore.isValid) {

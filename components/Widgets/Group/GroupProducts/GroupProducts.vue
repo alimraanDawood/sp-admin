@@ -38,7 +38,7 @@
                 </TableHeader>
                 <TableBody>
                     <TableRow class="cursor-pointer" @click="$router.push(`/main/products/${product.id}`)"
-                        v-for="product in group.expand.products">
+                        v-for="product in group.expand?.products">
                         <TableCell class="font-medium">
                             <div class="flex flex-row items-center gap-2">
                                 <div class="aspect-square w-8 bg-primary rounded bg-center bg-cover"

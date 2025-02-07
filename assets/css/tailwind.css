@@ -90,14 +90,12 @@
     height: 100%;
     top: 0;
     left: 0;
-    background: linear-gradient(
-      110deg,
-      rgba(227, 227, 227, 0) 0%,
-      rgba(227, 227, 227, 0) 40%,
-      rgba(227, 227, 227, 0.5) 50%,
-      rgba(227, 227, 227, 0) 60%,
-      rgba(227, 227, 227, 0) 100%
-    );
+    background: linear-gradient(110deg,
+        rgba(227, 227, 227, 0) 0%,
+        rgba(227, 227, 227, 0) 40%,
+        rgba(227, 227, 227, 0.5) 50%,
+        rgba(227, 227, 227, 0) 60%,
+        rgba(227, 227, 227, 0) 100%);
     animation: gradient-animation_2 1.2s linear infinite;
   }
 }
@@ -106,7 +104,24 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
   }
 }

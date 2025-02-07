@@ -13,6 +13,7 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     'nuxt-viewport',
     'pinia-plugin-persistedstate',
+    'nuxt-tiptap-editor'
   ],
 
 
@@ -34,6 +35,10 @@ export default defineNuxtConfig({
      * @default "./components/ui"
      */
     componentDir: './components/ui'
+  },
+
+  tiptap: {
+    prefix: 'Tiptap', //prefix for Tiptap imports, composables not included
   },
  
 })

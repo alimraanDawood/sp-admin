@@ -10,6 +10,9 @@
 					<TableHead class="border text-center w-64">Allow Back Order</TableHead>
 					<TableHead class="border text-center w-64">Manage Inventory</TableHead>
 					<TableHead class="border text-right w-44">
+						Cost
+					</TableHead>
+					<TableHead class="border text-right w-44">
 						Price
 					</TableHead>
 					<TableHead class="border text-right w-44">
@@ -32,6 +35,12 @@
 					<TableCell class="text-center border">
 						<Checkbox :checked="variant.manageInventory"
 							@update:checked="(val) => variant.manageInventory = val" />
+					</TableCell>
+					<TableCell class="text-right border focus-within:bg-blue-100">
+						<div class="flex flex-row items-center">
+							<PhosphorIconCoins :size="18" class="text-black/50" />
+							<CurrencyInput v-model="variant.cost" :options="{ currency: 'UGX' }" />
+						</div>
 					</TableCell>
 					<TableCell class="text-right border focus-within:bg-blue-100">
 						<div class="flex flex-row items-center">
@@ -76,6 +85,16 @@
 
 					<Checkbox :checked="variant.manageInventory"
 							@update:checked="(val) => variant.manageInventory = val" />
+				</div>
+
+				<div class="flex flex-row w-full p-3 gap-1">
+					<div class="flex flex-row items-center gap-1">
+						<PhosphorIconCoins :size="18" class="text-black/50" />
+						<span class="font-medium">Cost</span>
+					</div>
+					<div class="flex flex-row w-full items-center justify-end">
+						<CurrencyInput v-model="variant.cost" :options="{ currency: 'UGX' }" />
+					</div>
 				</div>
 
 				<div class="flex flex-row w-full p-3 gap-1">
