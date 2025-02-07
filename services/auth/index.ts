@@ -1,6 +1,6 @@
 import Pocketbase from 'pocketbase';
 import { type RecordModel } from 'pocketbase';
-const pocketbase  = new Pocketbase("https://sports-palace.pockethost.io");
+const pocketbase  = new Pocketbase("https://skether.pockethost.io");
 
 export async function signUp(options : any) {
     try {

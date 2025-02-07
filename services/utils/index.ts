@@ -1,6 +1,6 @@
 import Pocketbase from 'pocketbase';
 
-const pb = new Pocketbase("https://sports-palace.pockethost.io");
+const pb = new Pocketbase("https://skether.pockethost.io");
 
 
 export function getFileUrl(record : any, url : string, options : any) {

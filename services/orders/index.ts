@@ -1,6 +1,6 @@
 import Pocketbase from 'pocketbase';
 
-const pocketbase = new Pocketbase('https://sports-palace.pockethost.io');
+const pocketbase = new Pocketbase('https://skether.pockethost.io');
 
 
 export async function getOrders(page : number, numPerPage : number) {
