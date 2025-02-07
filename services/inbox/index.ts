@@ -27,5 +27,5 @@ class InboxManager {
     }
 }
 
-const pb = new Pocketbase('http://localhost:8090/');
+const pb = new Pocketbase('https://sports-palace.pockethost.io/');
 export const inboxManager = new InboxManager(pb);

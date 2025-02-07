@@ -1,6 +1,6 @@
 import PocketBase from 'pocketbase';
 
-const pocketbase = new PocketBase('http://localhost:8090');
+const pocketbase = new PocketBase('https://sports-palace.pockethost.io');
 
 export async function getCustomers(page : number, numPerPage : number) {
     try { 
