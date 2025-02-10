@@ -127,6 +127,9 @@ export default {
             link.click();
             document.body.removeChild(link);
         },
+        exitForm() {
+            this.$router.go(-1);
+        },
         async deleteCurrent() {
             try {
                 const result = await updateProduct(this.product.id, {

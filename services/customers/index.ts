@@ -1,6 +1,7 @@
-import PocketBase from 'pocketbase';
+import Pocketbase from 'pocketbase';
+import { SERVER_URL } from '@/services/utils';
 
-const pocketbase = new PocketBase('https://skether.pockethost.io');
+const pocketbase  = new Pocketbase(SERVER_URL);
 
 export async function getCustomers(page : number, numPerPage : number) {
     try { 
@@ -23,7 +24,8 @@ export async function createCustomer(options: any) {
 
 export async function getCustomer(customerId: string) {
     try {
-        const customer = await pocketbase.collection('Customers').getOne(customerId, { expand: 'orders, orders.orderItems' });
+        const customer = await pocketbase.collection('Customers').getOne(customerId, { expand: 'orders,orders.orderItems' });
+        console.log(customer)
         return customer;
     } catch(error) {
         throw(error);
@@ -101,3 +103,12 @@ export async function deleteCustomerGroup(groupId : string) {
         throw(e);
     }
 }
+
+export async function getCustomerOrders(customerId : string, page : number, numPerPage : number) {
+    try {
+        const result = await pocketbase.collection('Orders').getList(page, numPerPage, { filter: `customer.id = '${customerId}'`, expand: 'orderItems' });
+        return result;
+    } catch(e) {
+        throw(e);
+    }
+} 

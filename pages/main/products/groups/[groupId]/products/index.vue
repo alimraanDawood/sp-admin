@@ -44,7 +44,7 @@
                 </div>
             </div>
 
-            <div class="flex flex-col w-full h-full">
+            <div class="flex flex-col w-full overflow-hidden h-full">
                 <Table>
                     <TableHeader>
                         <TableRow>

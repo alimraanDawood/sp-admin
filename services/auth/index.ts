@@ -1,6 +1,8 @@
 import Pocketbase from 'pocketbase';
 import { type RecordModel } from 'pocketbase';
-const pocketbase  = new Pocketbase("https://skether.pockethost.io");
+import { SERVER_URL } from '@/services/utils';
+
+const pocketbase  = new Pocketbase(SERVER_URL);
 
 export async function signUp(options : any) {
     try {

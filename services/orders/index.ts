@@ -1,6 +1,8 @@
 import Pocketbase from 'pocketbase';
+import { SERVER_URL } from '@/services/utils';
 
-const pocketbase = new Pocketbase('https://skether.pockethost.io');
+console.log(SERVER_URL);
+const pocketbase = new Pocketbase(SERVER_URL);
 
 
 export async function getOrders(page : number, numPerPage : number) {

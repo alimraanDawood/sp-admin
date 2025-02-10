@@ -1,6 +1,8 @@
 import Pocketbase from "pocketbase";
+import { SERVER_URL } from '@/services/utils';
+
 export default defineNuxtRouteMiddleware((to, from) => {
-  const pb = new Pocketbase("https://skether.pockethost.io");
+  const pb = new Pocketbase(SERVER_URL);
 
 
   if (pb.authStore.isValid) {

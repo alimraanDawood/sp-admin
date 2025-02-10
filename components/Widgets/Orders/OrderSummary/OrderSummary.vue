@@ -23,14 +23,14 @@
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    <TableRow class="cursor-pointer"
+                    <TableRow  class="cursor-pointer"
                         v-for="item in order.expand.orderItems" :key="item.id">
                         <TableCell class="font-medium">
                             <div class="flex flex-row items-center gap-2">
                                 <span>{{ item.name }}</span>
                             </div>
                         </TableCell>
-                        <TableCell>{{ item.expand.variant.expand.options.map((option) => option.value).join(' / ') }}</TableCell>
+                        <TableCell>{{ item.expand?.variant.options.length > 0 ? item.expand?.variant?.expand?.options?.map((option) => option.value).join(' / ') : 'DEFAULT' }}</TableCell>
                         <TableCell class="text-right">{{  Intl.NumberFormat('currency', { style: 'currency', currency: 'UGX' }).format(item.price) }}</TableCell>
                         <TableCell class="text-right">x{{ item.quantity }}</TableCell>
                         <TableCell class="text-right">{{ Intl.NumberFormat('currency', { style: 'currency', currency: 'UGX' }).format(item.quantity * item.price) }}</TableCell>

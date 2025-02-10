@@ -123,7 +123,7 @@ const table = useVueTable({
 })
 
 watch(rowSelection, () => {
-    emits('update:selected', table.getFilteredSelectedRowModel().rows.map((row) => ({ options: row.original, cost: '', price: '', stock: 0, allowBackOrder: false, manageInventory: false, media: [], thumb: null })));
+    emits('update:selected', table.getFilteredSelectedRowModel().rows.map((row) => ({ options: row.original, cost: '', price: '', stock: 0, allowBackOrder: false, manageInventory: true, media: [], thumb: null })));
 }, { deep: true });
 
 </script>

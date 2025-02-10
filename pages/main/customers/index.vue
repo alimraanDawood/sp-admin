@@ -58,8 +58,18 @@
             </div>
 
             <div class="flex flex-row p-3 border rounded-b-xl">
-                <div v-if="page" class="flex flex-row items-center">
+                <div v-if="page" class="flex flex-row items-center whitespace-nowrap">
                     Page {{ page.page }} of {{ page.totalPages }} pages
+
+                    <div class="flex flex-row w-full gap-2 items-center">
+                        <button @click="prevPage"  :disabled="page.page === 1"  v-wave class="disabled:opacity-50 p-2 border shadow rounded">
+                            <PhosphorIconCaretLeft :size="18" />
+                        </button>
+
+                        <button @click="nextPage" :disabled="page.page === page.totalPages"  v-wave class="disabled:opacity-50 p-2 border shadow rounded">
+                            <PhosphorIconCaretRight :size="18" />
+                        </button>
+                    </div>
                 </div>
                 <div v-else class="flex flex-row items-center">
                     <div class="h-8 w-32 bg-black/5 rounded animate-pulse"></div>
@@ -98,6 +108,22 @@ export default {
         getFileUrl,
         async reloadCustomers() {
             this.page = await getCustomers(1, 10);
+        },
+        async nextPage() {
+            if(this.page) {
+                if(this.page.page < this.page.totalPages) {
+                    this.page = await getCustomers(this.page.page + 1, 10);
+                    return;
+                }
+            }
+        },
+        async prevPage() {
+            if(this.page) {
+                if(this.page.page > 1) {
+                    this.page = await getCustomers(this.page.page - 1, 10);
+                    return;
+                }
+            }
         }
     },
     components: {

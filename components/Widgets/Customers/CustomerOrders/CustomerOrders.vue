@@ -44,7 +44,7 @@
                 </TableHeader>
                 <TableBody>
                     <TableRow class="cursor-pointer" @click="$router.push(`/main/orders/${order.id}`)"
-                        v-for="order in customer.expand.orders">
+                        v-for="order in page?.items">
                         <TableCell class="font-medium">
                             <div class="flex flex-row items-center gap-2">
                                 
@@ -52,7 +52,7 @@
                             </div>
                         </TableCell>
                         <TableCell>
-                            {{ order.expand.orderItems.map((order) => order.name).join(', ') }}
+                            {{ order.expand.orderItems.length > 2 ? order.expand.orderItems.splice(0, 2).map(orderItem => orderItem.name).join(', ') + `and ${order.orderItems.length - 3} others` : order.expand.orderItems.map((order) => order.name).join(', ') }}
                         </TableCell>
                         <TableCell>{{ order.total }}</TableCell>
                         <TableCell>{{ order.paymentStatus }}</TableCell>
@@ -109,7 +109,7 @@ import {
 import { useVuelidate } from '@vuelidate/core';
 import { required, minLength, helpers } from '@vuelidate/validators';
 
-import { updateCustomer } from '@/services/customers';
+import { updateCustomer, getCustomerOrders } from '@/services/customers';
 import { toast } from 'vue-sonner';
 import { getFileUrl } from '@/services/utils';
 
@@ -122,6 +122,14 @@ export default {
     },
     data() {
         return {
+            page: null
+        }
+    },
+    async mounted() {
+        try {
+            this.page = await getCustomerOrders(this.customer.id);
+        } catch(e) {
+            console.error(e);
         }
     },
     validations() {

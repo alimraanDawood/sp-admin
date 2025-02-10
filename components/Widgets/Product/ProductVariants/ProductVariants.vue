@@ -55,9 +55,9 @@
                                         <TableCell class="text-right px-4 py-2">{{ variant.stock.toLocaleString() }} items
                                         </TableCell>
                                         <TableCell class="text-right px-4 py-2">
-                                            <button
+                                            <button @click="openEditVariantDialog(variant)"
                                                 class="hover:bg-black/10 ml-auto rounded-lg p-1 transition-all duration-400 ease-in-out">
-                                                <PhosphorIconDotsThree :size="24" />
+                                                <PhosphorIconPencilSimple :size="18" />
                                             </button>
                                         </TableCell>
                                     </TableRow>
@@ -69,12 +69,25 @@
                             <span class="text-black/50">Page 1 of 1</span>
                         </div>
                     </div>
+                    <EditProductVariantDialog v-model:open="dialogs.editVariant.open" :variant="dialogs.editVariant.variant" />
                 </div>
 </template>
 
 <script>
+import EditProductVariantDialog from './EditProductVariantDialog.vue';
+
 export default {
     props: ['product'],
+    data() {
+        return {
+            dialogs: {
+                editVariant: {
+                    open: false,
+                    variant: null
+                }
+            }
+        }
+    },
     computed: {
         options() {
             if (this.product && this.product.hasVariants) {
@@ -95,6 +108,17 @@ export default {
 
             return [{ name: 'DEFAULT' }];
         }
+    },
+    methods: {
+        openEditVariantDialog(variant) {
+            this.dialogs.editVariant = {
+                open: true,
+                variant: variant
+            }
+        }
+    },
+    components: {
+        EditProductVariantDialog
     }
 }
 </script>

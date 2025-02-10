@@ -1,4 +1,5 @@
 import Pocketbase from 'pocketbase';
+import { SERVER_URL } from '@/services/utils';
 
 
 class InboxManager {
@@ -27,5 +28,5 @@ class InboxManager {
     }
 }
 
-const pb = new Pocketbase('https://skether.pockethost.io/');
+const pb = new Pocketbase(SERVER_URL);
 export const inboxManager = new InboxManager(pb);
