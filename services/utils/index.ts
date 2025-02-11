@@ -1,6 +1,6 @@
 import Pocketbase from 'pocketbase';
 
-export const SERVER_URL = "https://sports-palace.pockethost.io"
+export const SERVER_URL = "https://skether.pockethost.io"
 const pb = new Pocketbase(SERVER_URL);
 
 
