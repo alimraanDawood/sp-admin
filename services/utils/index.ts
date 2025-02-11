@@ -1,7 +1,7 @@
 import Pocketbase from 'pocketbase';
+import { useServerUrl } from '@/composables/server';
 
-export const SERVER_URL = "https://sports-palace.pockethost.io"
-const pb = new Pocketbase(SERVER_URL);
+const pb = new Pocketbase(useServerUrl());
 
 
 export function getFileUrl(record : any, url : string, options : any) {

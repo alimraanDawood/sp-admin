@@ -1,7 +1,7 @@
 import Pocketbase from 'pocketbase';
-import { SERVER_URL } from '@/services/utils';
+import { useServerUrl } from '@/composables/server';
 
-const pocketbase  = new Pocketbase(SERVER_URL);
+const pocketbase  = new Pocketbase(useServerUrl());
 
 export async function getArticlesPreview(page : number, numPerPage : number) {
     try {

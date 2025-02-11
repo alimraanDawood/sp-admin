@@ -40,5 +40,11 @@ export default defineNuxtConfig({
   tiptap: {
     prefix: 'Tiptap', //prefix for Tiptap imports, composables not included
   },
+
+  runtimeConfig: {
+    public: {
+      SERVER_URL: process.env.NUXT_PUBLIC_SERVER_URL, // can be overridden by NUXT_API_SECRET environment variable
+    }
+  },
  
 })

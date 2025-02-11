@@ -1,5 +1,5 @@
 import Pocketbase from 'pocketbase';
-import { SERVER_URL } from '@/services/utils';
+import { useServerUrl } from '@/composables/server';
 
 
 class InboxManager {
@@ -28,5 +28,5 @@ class InboxManager {
     }
 }
 
-const pb = new Pocketbase(SERVER_URL);
+const pb = new Pocketbase(useServerUrl());
 export const inboxManager = new InboxManager(pb);

@@ -1,8 +1,8 @@
 import Pocketbase from 'pocketbase';
 import { type RecordModel } from 'pocketbase';
-import { SERVER_URL } from '@/services/utils';
+import { useServerUrl } from '@/composables/server';
 
-const pocketbase  = new Pocketbase(SERVER_URL);
+const pocketbase  = new Pocketbase(useServerUrl());
 
 export async function signUp(options : any) {
     try {

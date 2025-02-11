@@ -1,8 +1,8 @@
 import Pocketbase from 'pocketbase';
-import { SERVER_URL } from '@/services/utils';
+import { useServerUrl } from '@/composables/server';
 
-console.log(SERVER_URL);
-const pocketbase = new Pocketbase(SERVER_URL);
+console.log(useServerUrl());
+const pocketbase = new Pocketbase(useServerUrl());
 
 
 export async function getOrders(page : number, numPerPage : number) {

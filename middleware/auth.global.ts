@@ -1,8 +1,8 @@
 import Pocketbase from "pocketbase";
-import { SERVER_URL } from '@/services/utils';
+import { useServerUrl } from '@/composables/server';
 
 export default defineNuxtRouteMiddleware((to, from) => {
-  const pb = new Pocketbase(SERVER_URL);
+  const pb = new Pocketbase(useServerUrl());
 
 
   if (pb.authStore.isValid) {
