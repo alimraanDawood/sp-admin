@@ -127,7 +127,7 @@ export async function createProduct(formData : any) {
 
         } else {
 
-            const defaultVariant = await pocketbase.collection('ProductVariants').create({ options: [], stock: formData.details.defaultVariant.stock, cost: formData.details.defaultVariant.cost, price: formData.details.defaultVariant.price, allowBackorder: formData.details.defaultVariant.allowBackOrder, manageInventory: formData.details.defaultVariant.manageInventory, media: [...formData.details.media], thumb:formData.details.thumb === null ? ( formData.details.media.length > 0 ? formData.details.media[0] : null  ) : formData.details.thumb });
+            const defaultVariant = await pocketbase.collection('ProductVariants').create({ options: [], stock: formData.details.defaultVariant.stock, cost: formData.details.defaultVariant.cost, price: formData.details.defaultVariant.price, allowBackorder: formData.details.defaultVariant.allowBackOrder, manageInventory: formData.details.defaultVariant.manageInventory });
 
             variants = [defaultVariant.id];
         }
@@ -210,6 +210,37 @@ export async function createFeaturedProductGroup(title : string) {
 export async function getFeaturedProductGroup(featuredGroupId : string) {
     try {
         const result = await pocketbase.collection('FeaturedProductGroups').getOne(featuredGroupId, { expand: 'products' });
+        return result;
+    } catch(e) {
+        throw(e);
+    }
+}
+
+export async function getProductGroupsFromProduct(productId : string) {
+    try {
+        const results = await pocketbase.collection('ProductGroups').getFullList({ filter: `products ~ '${productId}'` });
+
+        return results;
+    } catch(e) {
+        throw(e);
+    }
+}
+
+export async function updateProductVariant(variantId : string, options: any) {
+    try {
+        const result = await pocketbase.collection('ProductVariants').update(variantId, options);
+
+        return result;
+    } catch(e) {
+        throw(e);
+    }
+}
+
+export async function getProductVariant(variantId : string) {
+    try {
+        const result = await pocketbase.collection('ProductVariants').getOne(variantId, {
+            expand: 'options'
+        });
         return result;
     } catch(e) {
         throw(e);

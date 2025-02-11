@@ -1,14 +1,15 @@
 <template>
     <div class="flex flex-col gap-5 p-5 w-full">
-        <button type="button" @click="addMedia" ref="dropZoneRef"
-            class="w-full outline-2 outline-dashed rounded-lg p-5 items-center flex text-black/50 flex-col justify-center gap-1 hover:outline-blue-500"
+        <button v-show="true" :disabled="loading" type="button" @click="addMedia" ref="dropZoneRef"
+            class="w-full disabled:animate-pulse outline-2 outline-dashed rounded-lg p-5 items-center flex h-32 text-black/50 flex-col justify-center gap-1 hover:outline-blue-500"
             :class="{ 'outline-blue-500 text-blue-500': isOverDropZone }">
-            <div class="flex flex-row gap-1 items-center font-semibold">
+            <div v-if="!loading" class="flex flex-row gap-1 items-center font-semibold">
                 <PhosphorIconDownloadSimple :size="20" />
 
                 Upload Files
             </div>
-            <span>Drag and drop images here or click to upload</span>
+            <span v-if="!loading">Drag and drop images here or click to upload</span>
+            <PhosphorIconSpinner v-else :size="32" class="animate-spin" />
         </button>
     </div>
 </template>
@@ -19,7 +20,7 @@ import { useSortable } from '@vueuse/integrations/useSortable'
 
 const { $viewport } = useNuxtApp();
 
-const props = defineProps(['modelValue']);
+const props = defineProps(['modelValue', 'loading']);
 const emit = defineEmits(['update:modelValue', 'filesAdded']);
 
 const dropZoneRef = ref();

@@ -11,37 +11,13 @@
                 <!-- Options -->
                 <ProductOptions @updated="reloadProduct" :product="product" />
 
-
                 <!-- Variants -->
                 <ProductVariants @updated="reloadProduct" :product="product" />
             </div>
 
             <div class="flex flex-col gap-3">
-                <div class=" w-full flex flex-col shadow overflow-hidden rounded-lg ">
-                    <div class="flex bg-white items-center gap-3 flex-row border rounded-t-lg p-5">
-                        <span class="text-lg font-medium">Categorization</span>
-
-                        <button
-                            class="hover:bg-black/10 ml-auto rounded-lg p-1 transition-all duration-400 ease-in-out">
-                            <PhosphorIconDotsThree :size="24" />
-                        </button>
-                    </div>
-
-                    <div class="flex flex-col bg-white divide-y border-x border-b runded-b-lg">
-                        <div class="gap-3 grid grid-cols-2 p-5 py-3">
-                            <span>Groups</span>
-
-                            <span>{{ product.expand.groups?.length ? product.expand.groups?.map(group =>
-                                group.name).join(', ') : '-' }}</span>
-                        </div>
-
-                        <div class="gap-3 grid grid-cols-2 p-5 py-3">
-                            <span>Tags</span>
-
-                            <span>{{ product.tags.length ? product.tags.split(',').join(', ') : '-' }}</span>
-                        </div>
-                    </div>
-                </div>
+                <!-- Categorization -->
+                 <ProductCategorization :product="product" @updated="reloadProduct" />
             </div>
         </div>
     </div>
@@ -52,6 +28,7 @@ import ProductDetails from '@/components/Widgets/Product/ProductDetails/ProductD
 import ProductMedia from '@/components/Widgets/Product/ProductMedia/ProductMedia.vue';
 import ProductVariants from '@/components/Widgets/Product/ProductVariants/ProductVariants.vue';
 import ProductOptions from '@/components/Widgets/Product/ProductOptions/ProductOptions.vue';
+import ProductCategorization from '~/components/Widgets/Product/ProductCategorization/ProductCategorization.vue';
 
 import { getProduct } from '@/services/products';
 import { getFileUrl } from '~/services/utils';
@@ -117,6 +94,7 @@ export default {
         ProductMedia,
         ProductVariants,
         ProductOptions,
+        ProductCategorization
     }
 }
 </script>

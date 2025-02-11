@@ -14,7 +14,7 @@
             <div class="gap-3 grid grid-cols-2 p-5 py-3">
                 <span>Id</span>
 
-                <button @click="$router.push(`/main/customers/${order.expand.customer.id}/`)" class="text-primary underline w-full whitespace-wrap">{{ order.expand.customer.name }}</button>
+                <button @click="$router.push(`/main/customers/${order.expand.customer?.id}/`)" class="text-primary underline w-full whitespace-wrap">{{ order.expand.customer?.name }}</button>
             </div>
 
             <div class="gap-3 flex flex-row w-full p-5 py-3">
@@ -24,10 +24,10 @@
 
                 <div class="flex flex-col w-full text-right">
                     <div class="" >
-                        {{ order.expand.customer.email }}
+                        {{ order.expand.customer?.email }}
                     </div>
                     <div class="" >
-                        {{ order.expand.customer.phone }}
+                        {{ order.expand.customer?.phone }}
                     </div>
                 </div>
             </div>

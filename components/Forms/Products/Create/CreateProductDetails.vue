@@ -175,7 +175,7 @@ const media = computed({
     }
 });
 
-useSortable(sortable, productStore.create.forms.details.media, { animation: 150 });
+useSortable(sortable, media, { animation: 150 });
 
 function onDrop(files) {
     console.log(files);

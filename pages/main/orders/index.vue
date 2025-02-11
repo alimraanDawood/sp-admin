@@ -24,8 +24,8 @@
                     <TableBody>
                         <TableRow class="cursor-pointer" @click="$router.push(`/main/orders/${order.id}`)" v-for="order in page?.items" :key="order.id">
                             <TableCell class="font-medium">{{ order.id }}</TableCell>
-                            <TableCell>{{ order.expand.customer.name }}</TableCell>
-                            <TableCell>{{ order.expand.orderItems.map(item => item.name).join(', ') }}</TableCell>
+                            <TableCell>{{ order.expand?.customer?.name }}</TableCell>
+                            <TableCell>{{ order.expand?.orderItems?.map(item => item.name).join(', ') }}</TableCell>
                             <TableCell>{{ order.total }}</TableCell>
                             <TableCell>{{ order.paymentStatus }}</TableCell>
                             <TableCell>{{ order.orderStatus }}</TableCell>

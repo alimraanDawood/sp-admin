@@ -1,6 +1,6 @@
 <template>
     <div class=" w-full flex flex-col shadow overflow-hidden rounded-lg ">
-        <div class="flex bg-white items-center gap-3 flex-row border rounded-t-lg p-5">
+        <div class="flex bg-white items-center gap-3 flex-row border rounded-t-lg px-5 py-3">
             <span class="text-lg font-medium">Media</span>
 
             <div class="ml-auto">

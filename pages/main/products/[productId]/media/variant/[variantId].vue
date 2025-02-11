@@ -1,6 +1,6 @@
 <template>
     <div class="flex flex-col w-full h-[100dvh] p-3 bg-black/20 overflow-hidden">
-        <div v-if="poduct !== null" class="flex flex-col w-full h-full rounded-lg bg-white border shadow">
+        <div v-if="variant !== null" class="flex flex-col w-full h-full rounded-lg bg-white border shadow">
             <div class="flex flex-row w-full border-b items-center">
                 <Dialog>
                     <DialogTrigger>
@@ -48,11 +48,11 @@
 
             <div v-if="mode === 'GALLERY'" class="flex flex-col w-full h-full">
                 <div class="flex flex-col w-full h-full justify-center items-center p-5 bg-black/5">
-                    <img :src="getFileUrl(product, current, { thumb: '50x50' })" class="h-64 rounded-xl border" />
+                    <img :src="getFileUrl(variant, current, { thumb: '50x50' })" class="h-64 rounded-xl border" />
                 </div>
     
                 <div class="flex flex-row items-center justify-center w-full p-3 border-t gap-2">
-                    <button class="aspect-square bg-primary w-8 bg-center bg-cover border rounded-lg" :style="{ backgroundImage: `url('${getFileUrl(product, image, { thumb: '50x50' })}')` }" @click="current = image" :class="{ 'border-2 border-primary': current === image }" v-for="image in product?.media"></button>
+                    <button class="aspect-square bg-primary w-8 bg-center bg-cover border rounded-lg" :style="{ backgroundImage: `url('${getFileUrl(variant, image, { thumb: '50x50' })}')` }" @click="current = image" :class="{ 'border-2 border-primary': current === image }" v-for="image in variant?.media"></button>
                 </div>
             </div>
             
@@ -64,7 +64,7 @@
                             </div>
                         </div>
     
-                        <MediaGrid v-else :record="product" v-model:media="this.media" />
+                        <MediaGrid v-else :record="variant" v-model:media="this.media" />
                     </div>
                     
                     <div class="flex flex-col h-full w-full">
@@ -85,7 +85,7 @@
 </template>
 
 <script>
-import { getProduct, updateProduct } from '@/services/products';
+import { getProductVariant, updateProductVariant } from '@/services/products';
 import { getFileUrl } from '~/services/utils';
 import AddMediaCom from '@/components/Widgets/Product/ProductMedia/AddMediaCom';
 import { toast } from 'vue-sonner';
@@ -100,7 +100,7 @@ export default {
     data() {
         return {
             mode: 'GALLERY', // GALLERY || EDIT
-            product: null,
+            variant: null,
             loading: true,
             current: null,
             uploading: false
@@ -108,9 +108,9 @@ export default {
     },
     async mounted() {
         this.loading = true;
-        this.product = await getProduct(this.$route.params.productId);
-        if(this.product) {
-            this.current = this.product.media[0];
+        this.variant = await getProductVariant(this.$route.params.variantId);
+        if(this.variant) {
+            this.current = this.variant.media[0];
         }
 
         this.loading = false;
@@ -118,21 +118,21 @@ export default {
     computed: {
         media: {
             get() {
-                return this.product.media;
+                return this.variant.media;
             },
             set(val) {
                 console.log(val)
-                this.product.media = val;
-                this.updateMediaOrder(this.product.media);
+                this.variant.media = val;
+                this.updateMediaOrder(this.variant.media);
             } 
         }
     },
     methods: {
         getFileUrl,
-        async reloadProduct() {
-            this.product = await getProduct(this.$route.params.productId);
-            if(this.product) {
-                this.current = this.product.media[0];
+        async reloadVariant() {
+            this.variant = await getProductVariant(this.$route.params.variantId);
+            if(this.variant) {
+                this.current = this.variant.media[0];
             }
         },
         async addFiles(files) {
@@ -142,16 +142,16 @@ export default {
             // upload the file and reload the media
             try {
                 this.uploading  = true;
-                const result = await updateProduct(this.product.id, { 'media+': [...files] });
+                const result = await updateProductVariant(this.variant.id, { 'media+': [...files] });
 
                 if(result) {
-                    await this.reloadProduct();
+                    await this.reloadVariant();
                 }
-                toast.success("Successfully updated Product!");
+                toast.success("Successfully updated Variant!");
 
             } catch(e) {
                 console.error(e);
-                toast.error("We were unable to update the product media! Try again later.")
+                toast.error("We were unable to update the variant media! Try again later.")
             }
 
             this.uploading = false;
@@ -159,16 +159,16 @@ export default {
         async updateMediaOrder(order) {
             try {
                 this.uploading = true;
-                const result = await updateProduct(this.product.id, { 'media': order });
+                const result = await updateProductVariant(this.variant.id, { 'media': order, thumb: order[0] });
 
                 if(result) {
-                    await this.reloadProduct();
+                    await this.reloadVariant();
                 }
 
-                toast.success("Successfully updated Product!");
+                toast.success("Successfully updated Variant!");
             } catch(e) {
                 console.error(e);
-                toast.error("We were unable to update the product media! Try again later.")
+                toast.error("We were unable to update the variant media! Try again later.")
             }
 
             this.uploading = false;
@@ -179,7 +179,7 @@ export default {
         },
         downloadCurrent() {
             const link = document.createElement('a');
-            link.href = getFileUrl(this.product, this.current);
+            link.href = getFileUrl(this.variant, this.current);
             link.target = '_blank';
             link.download = this.current.name || 'download';
             document.body.appendChild(link);
@@ -191,13 +191,13 @@ export default {
         },
         async deleteCurrent() {
             try {
-                const result = await updateProduct(this.product.id, {
+                const result = await updateProductVariant(this.variant.id, {
                     'media-': [this.current] 
                 });
 
                 if(result) {
                     toast.success("Successfully deleted image!");
-                    await this.reloadProduct();
+                    await this.reloadVariant();
                 }
             } catch(e) {
                 console.error(e);
@@ -207,13 +207,13 @@ export default {
         },
         async deleteImage(image) {
             try {
-                const result = await updateProduct(this.product.id, {
+                const result = await updateProductVariant(this.variant.id, {
                     'media-': [image] 
                 });
 
                 if(result) {
                     toast.success("Successfully deleted image!");
-                    await this.reloadProduct();
+                    await this.reloadVariant();
                 }
             } catch(e) {
                 console.error(e);

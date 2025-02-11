@@ -21,11 +21,11 @@ const modelValue = computed({
 const open = ref(false)
 const searchTerm = ref('')
 
-const filteredGroups = computed(() => groups.filter(i => !modelValue.value.includes(i)))
+const filteredGroups = computed(() => groups.filter(i => !modelValue.value.find(j => j.id === i.id)))
 </script>
 
 <template>
-  <TagsInput class="px-0 gap-0 w-full" :model-value="modelValue">
+  <TagsInput class="px-0 gap-0 w-full" v-model="modelValue">
     <div class="flex gap-2 flex-wrap items-center px-3">
       <TagsInputItem class="bg-primary text-white" v-for="item in modelValue" :key="item.id" :value="item.name">
         <TagsInputItemText />
@@ -44,7 +44,7 @@ const filteredGroups = computed(() => groups.filter(i => !modelValue.value.inclu
         <ComboboxContent>
           <CommandList
             position="popper"
-            class="w-[--radix-popper-anchor-width] rounded-md mt-2 border bg-popover text-popover-foreground shadow-md outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2"
+            class=" z-50 w-[--radix-popper-anchor-width] rounded-md mt-2 border bg-popover text-popover-foreground shadow-md outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2"
           >
             <CommandEmpty />
             <CommandGroup>

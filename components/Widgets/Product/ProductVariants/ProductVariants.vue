@@ -1,6 +1,6 @@
 <template>
     <div class=" w-full flex flex-col shadow overflow-hidden rounded-lg ">
-                    <div class="flex bg-white items-center gap-3 flex-row border rounded-t-lg p-5">
+                    <div class="flex bg-white items-center gap-3 flex-row border rounded-t-lg px-5 py-3">
                         <span class="text-lg font-medium">Variants</span>
 
                         <button
@@ -69,7 +69,7 @@
                             <span class="text-black/50">Page 1 of 1</span>
                         </div>
                     </div>
-                    <EditProductVariantDialog v-model:open="dialogs.editVariant.open" :variant="dialogs.editVariant.variant" />
+                    <EditProductVariantDialog :product="product" @updated="$emit('updated')" v-model:open="dialogs.editVariant.open" :variant="dialogs.editVariant.variant" />
                 </div>
 </template>
 
@@ -78,6 +78,7 @@ import EditProductVariantDialog from './EditProductVariantDialog.vue';
 
 export default {
     props: ['product'],
+    emits: ['updated'],
     data() {
         return {
             dialogs: {
