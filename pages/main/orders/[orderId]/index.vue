@@ -8,7 +8,7 @@
 
             <div class="flex flex-col w-full gap-3">
                 <OrderCustomerDetails :order="order" />
-                <OrderPaymentDetails :order="order" />
+                <OrderPaymentDetails @updated="reloadOrder" :order="order" />
             </div>
         </div>
     </div>

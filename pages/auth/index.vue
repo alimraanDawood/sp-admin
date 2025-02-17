@@ -1,6 +1,6 @@
 <template>
     <div class="flex flex-col h-[100dvh] w-screen bg-black/5 justify-center items-center">
-        <div class="flex flex-col h-full md:h-fit w-full md:max-w-[500px]">
+        <div v-if="!redirecting" class="flex flex-col h-full md:h-fit w-full md:max-w-[500px]">
             <div class="flex flex-row p-3 items-center justify-between rounded-t-xl border bg-[#fafafa]">
                 <button @click="$router.go(-1)" class="text-sm font-medium text-primary">Cancel</button>
 
@@ -82,6 +82,10 @@
 
 
         </div>
+
+        <div v-else class="w-64 grid place-items-center rounded-lg bg-white shadow border aspect-square">
+            <PhosphorIconSpinner class="animate-spin" :size="32" />
+        </div>
     </div>
 </template>
 
@@ -102,6 +106,7 @@ export default {
                 password: '',
                 passwordVisible: false,
             },
+            redirecting: false,
             loading: false
         }
     },
@@ -128,6 +133,7 @@ export default {
 
                     if(user) {
                         toast.success('Login successful');
+                        this.redirecting = true;
                         this.$router.push('/main/products');
                     } else {
                         toast.error('Invalid email or password');

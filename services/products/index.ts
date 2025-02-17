@@ -1,12 +1,13 @@
 import Pocketbase from 'pocketbase';
 import { useServerUrl } from '@/composables/server';
-console.log(useServerUrl());
+
 const pocketbase  = new Pocketbase(useServerUrl());
 
-export async function getProducts(page : number, numPerPage : number) {
+export async function getProducts(page : number, numPerPage : number, sort: string = '-created') {
     try {
         const results = await pocketbase.collection('Products').getList(page, numPerPage, {
-            expand: 'variants'
+            expand: 'variants',
+            sort: sort
         });
         return results;
     } catch(e) {
@@ -72,9 +73,9 @@ export async function deleteProduct(productId: string) {
 
 
 
-export async function getProductGroups() {
+export async function getProductGroups(sort: string = '-created') {
     try {
-        const results = await pocketbase.collection('ProductGroups').getList();
+        const results = await pocketbase.collection('ProductGroups').getFullList({ sort: '-created' });
         return results.items;
     } catch(e) {
         throw(e);
@@ -83,8 +84,8 @@ export async function getProductGroups() {
 
 export async function getProductTags() {
     try {
-        const results = await pocketbase.collection('ProductTags').getList();
-        return results.items;
+        const results = await pocketbase.collection('ProductTags').getFullList();
+        return results;
     } catch(e) {
         throw(e);
     }
@@ -170,9 +171,9 @@ export async function createProductGroup(name : string, description: string, cov
     }
 }
 
-export async function getFeaturedProductGroups(page, numPerPage) {
+export async function getFeaturedProductGroups(page : number, numPerPage : number, sort: string = '-created') {
     try {
-        const results = await pocketbase.collection('FeaturedProductGroups').getList(page, numPerPage);
+        const results = await pocketbase.collection('FeaturedProductGroups').getList(page, numPerPage, { sort: sort });
         return results.items;
     } catch(e) {
         throw(e);
@@ -207,9 +208,9 @@ export async function createFeaturedProductGroup(title : string) {
     }
 }
 
-export async function getFeaturedProductGroup(featuredGroupId : string) {
+export async function getFeaturedProductGroup(featuredGroupId : string, sort: string = '-created') {
     try {
-        const result = await pocketbase.collection('FeaturedProductGroups').getOne(featuredGroupId, { expand: 'products' });
+        const result = await pocketbase.collection('FeaturedProductGroups').getOne(featuredGroupId, { expand: 'products', sort: sort });
         return result;
     } catch(e) {
         throw(e);
@@ -218,7 +219,7 @@ export async function getFeaturedProductGroup(featuredGroupId : string) {
 
 export async function getProductGroupsFromProduct(productId : string) {
     try {
-        const results = await pocketbase.collection('ProductGroups').getFullList({ filter: `products ~ '${productId}'` });
+        const results = await pocketbase.collection('ProductGroups').getFullList({ filter: `products ~ '${productId}'`, sort: '-created' });
 
         return results;
     } catch(e) {
@@ -242,6 +243,20 @@ export async function getProductVariant(variantId : string) {
             expand: 'options'
         });
         return result;
+    } catch(e) {
+        throw(e);
+    }
+}
+
+export async function searchProducts(query : string, page : number, numPerPage : number, sort : string = '') {
+    try {
+        const results = await pocketbase.collection('Products').getList(page, numPerPage, {
+            expand: 'variants',
+            filter: `name ~ '${query}'`,
+            sort: sort
+        });
+
+        return results;
     } catch(e) {
         throw(e);
     }

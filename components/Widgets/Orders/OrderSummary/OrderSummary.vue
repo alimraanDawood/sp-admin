@@ -19,7 +19,6 @@
                         <TableHead class="text-right">Price</TableHead>
                         <TableHead class="text-right">Quantity</TableHead>
                         <TableHead class="text-right">Total</TableHead>
-                        <TableHead><!-- Actions --></TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -27,38 +26,13 @@
                         v-for="item in order.expand.orderItems" :key="item.id">
                         <TableCell class="font-medium">
                             <div class="flex flex-row items-center gap-2">
-                                <span>{{ item.name }}</span>
+                                <NuxtLink :to="`/main/products/${item.product}`" class="text-primary underline font-medium">{{ item.name }}</NuxtLink>
                             </div>
                         </TableCell>
                         <TableCell>{{ item.expand?.variant.options.length > 0 ? item.expand?.variant?.expand?.options?.map((option) => option.value).join(' / ') : 'DEFAULT' }}</TableCell>
                         <TableCell class="text-right">{{  Intl.NumberFormat('currency', { style: 'currency', currency: 'UGX' }).format(item.price) }}</TableCell>
                         <TableCell class="text-right">x{{ item.quantity }}</TableCell>
                         <TableCell class="text-right">{{ Intl.NumberFormat('currency', { style: 'currency', currency: 'UGX' }).format(item.quantity * item.price) }}</TableCell>
-
-                        <TableCell class="text-center">
-                            <Dialog>
-                                <DialogTrigger @click="e => e.stopPropagation()" as-child>
-                                    <button class="p-1">
-                                        <PhosphorIconTrash :size="20" />
-                                    </button>
-                                </DialogTrigger>
-                                <DialogContent>
-                                    <DialogHeader>
-                                        <DialogTitle>Are you sure you want to remove this group?</DialogTitle>
-                                        <DialogDescription>This action cannot be reversed!</DialogDescription>
-                                    </DialogHeader>
-                                    <DialogFooter class="flex flex-row gap-2 justify-end">
-                                        <DialogClose class="w-full">
-                                            <button class="bg-[#fafafa] hover:bg-black/5 w-full px-4 p-1 rounded shadow border">Cancel</button>
-                                        </DialogClose>
-                                        <DialogClose class="w-full">
-                                            <button @click="removeGroupFromCustomer(group.id)"
-                                                class="bg-primary font-medium text-white w-full whitespace-nowrap px-4 p-1 rounded shadow">Remove</button>
-                                        </DialogClose>
-                                    </DialogFooter>
-                                </DialogContent>
-                            </Dialog>
-                        </TableCell>
                     </TableRow>
                 </TableBody>
             </Table>

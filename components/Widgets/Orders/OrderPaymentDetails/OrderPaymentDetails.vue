@@ -35,12 +35,131 @@
                     </a>
                 </div>
             </div>
+
+            <div class="flex flex-row gap-3 w-full p-5 py-3">
+                <ConfirmDialog v-if="order.paymentStatus === 'PENDING'"  title="Verify Payment" description="Are you sure you want to verify this payment?" @onConfirm="verifyPayment">
+                    <template #trigger>
+                        <button :disabled="verifying" v-wave class="flex flex-row disabled:animate-pulse px-4 bg-black/5 gap-2 text-sm border font-medium text-black/70 p-1">
+                            <span v-if="verifying">Verifying</span>
+                            <span v-else >Verify Payment</span>
+
+                            <PhosphorIconSpinner v-if="verifying" :size="20" class="animate-spin" />
+                        </button>
+                    </template>
+
+                    <template #body>
+                        <div class="flex flex-row items-center gap-1">
+                            <Switch :checked="sendNotification" @update:checked="e => this.sendNotification = e" />
+                            <span class="font-medium text-black/70">Send Notification to customer.</span>        
+                        </div>
+                    </template>
+                </ConfirmDialog>
+
+                <ConfirmDialog v-if="order.paymentStatus === 'COMPLETED'"  title="Unverify Payment" description="Are you sure you want to undo verification of this payment?" @onConfirm="unverifyPayment">
+                    <template #trigger>
+                        <button :disabled="verifying" v-wave class="flex flex-row disabled:animate-pulse px-4 bg-black/5 gap-2 text-sm border font-medium text-black/70 p-1">
+                            <span v-if="verifying">Verifying</span>
+                            <span v-else >Unverify Payment</span>
+
+                            <PhosphorIconSpinner v-if="verifying" :size="20" class="animate-spin" />
+                        </button>
+                    </template>
+
+                    <template #body>
+                        
+                    </template>
+                </ConfirmDialog>
+
+                <button @click="sendPaymentGuide" :disabled="sendingGuide" v-wave class="flex flex-row disabled:animate-pulse px-4 bg-black/5 gap-2 text-sm border font-medium text-black/70 p-1">
+                    <span v-if="sendingGuide">Sending</span>
+                    <span v-else >Send Payment Guide</span>
+
+                    <PhosphorIconSpinner v-if="sendingGuide" :size="20" class="animate-spin" />
+                </button>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
+import ConfirmDialog from '~/components/Misc/ConfirmDialog.vue';
+import { updateOrder, sendPaymentConfirmationNotification, sendPaymentGuideNotification } from '~/services/orders';
+
+import { toast } from 'vue-sonner';
+
 export default {
-    props: ['order']
+    props: ['order'],
+    emits: ['updated'],
+    data() {
+        return {
+            sendNotification: true,
+            verifying: false,
+            sendingGuide: false,
+        }
+    },
+    components: {
+        ConfirmDialog
+    },
+    methods: {
+        async verifyPayment() {
+            this.verifying = true;
+            
+            try {
+                const result = await updateOrder(this.order.id, { paymentStatus: 'COMPLETED' });
+
+                if(result) {
+                    toast.success("Successfully updated order!");
+                    if(this.sendNotification) {
+                        await sendPaymentConfirmationNotification(this.order.id);
+                        toast.success("Successfully Sent Notification!");
+                    }
+                }
+
+                this.$emit('updated', true);
+            } catch(e) {
+                console.error(e);
+
+                toast.error("Something went wrong!")
+            }
+
+            this.verifying = false;
+        },
+
+        async unverifyPayment() {
+            this.verifying = true;
+            
+            try {
+                const result = await updateOrder(this.order.id, { paymentStatus: 'PENDING' });
+
+                if(result) {
+                    toast.success("Successfully updated order!");
+                    
+                }
+
+                this.$emit('updated', true);
+            } catch(e) {
+                console.error(e);
+
+                toast.error("Something went wrong!")
+            }
+
+            this.verifying = false;
+        },
+
+        async sendPaymentGuide() {
+            this.sendingGuide = true;
+            
+            try {
+                await sendPaymentGuideNotification(this.order.id);
+                toast.success("Successfully Sent Notification!");
+            } catch(e) {
+                console.error(e);
+
+                toast.error("Something went wrong!")
+            }
+
+            this.sendingGuide = false;
+        }
+    }
 }
 </script>

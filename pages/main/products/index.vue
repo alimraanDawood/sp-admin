@@ -5,14 +5,27 @@
                 <span class="text-2xl font-medium">Products</span>
 
                 <div class="flex flex-row ml-auto gap-2">
+
+                    <div class="flex flex-row items-center gap-1">
+                        <div class="flex flex-row items-center gap-1 border-2 rounded-lg p-1 focus-within:border-primary">
+                            <PhosphorIconMagnifyingGlass :size="18" />
+
+                            <input placeholder="Search Products" v-model="search.query" class="bg-transparent focus:outline-none placeholder:text-sm text-sm" />
+
+                            <button>
+                                <PhosphorIconX :size="16" />
+                            </button>
+                        </div>
+                    </div>
+
                     <NuxtLink to="/main/products/create" v-wave
                         class="bg-primary text-sm font-medium text-white flex flex-row gap-2 px-4 p-2 rounded-lg items-center">
                         <PhosphorIconPlusCircle :size="18" weight="bold" />
-                        Create Product
+                        <span class="hidden lg:block" >Create Product</span>
                     </NuxtLink>
                 </div>
             </div>
-            <div v-if="page" class="flex flex-col w-full border-x">
+            <div class="flex flex-col w-full border-x">
                 <Table>
                     <TableHeader>
                         <TableRow>
@@ -29,7 +42,7 @@
                             </TableHead>
                         </TableRow>
                     </TableHeader>
-                    <TableBody>
+                    <TableBody v-if="page">
                         <TableRow class="cursor-pointer" @click="$router.push(`/main/products/${product.id}`)" v-for="product in page?.items">
                             <TableCell class="font-medium">
                                 <div class="flex flex-row items-center gap-2">
@@ -55,12 +68,27 @@
                             </TableCell>
                         </TableRow>
                     </TableBody>
+
+                    <TableBody v-else>
+                        <TableRow class="cursor-pointer" v-for="i in 10">
+                            <TableCell class="font-medium">
+                                <div class="bg-black/10 w-full h-4 rounded-lg animate-pulse"></div>
+                            </TableCell>
+                            <TableCell>
+                                <div class="bg-black/10 w-full h-4 rounded-lg animate-pulse"></div>
+                            </TableCell>
+                            <TableCell>
+                                <div class="bg-black/10 w-full h-4 rounded-lg animate-pulse"></div>
+                            </TableCell>
+                            <TableCell>
+                                <div class="bg-black/10 w-full h-4 rounded-lg animate-pulse"></div>
+                            </TableCell>
+                            <TableCell>
+                                <div class="bg-black/10 w-full h-4 rounded-lg animate-pulse"></div>
+                            </TableCell>
+                        </TableRow>
+                    </TableBody>
                 </Table>
-            </div>
-            <div v-else class="flex divide-y flex-col w-full border-x">
-                <div class="p-4 flex flex-row" v-for="i in 10">
-                    <div class="h-12 flex flex-row w-full bg-black/10 rounded-lg animate-pulse"></div>
-                </Div>
             </div>
 
             <div class="flex flex-row p-3 border rounded-b-xl">
@@ -86,7 +114,7 @@
 </template>
 
 <script>
-import { getProducts } from '~/services/products';
+import { getProducts, searchProducts } from '~/services/products';
 import { getFileUrl } from '~/services/utils';
 
 definePageMeta({
@@ -101,30 +129,69 @@ definePageMeta({
 export default {
     data() {
         return {
-            page: null
+            _page: null,
+            sorters: {
+                name: {
+                    asc: 'name',
+                }
+            },
+            search: {
+                query: '',
+                _page: null
+            }
         }
     },
     async mounted() {
-        this.page = await getProducts(1, 10);
+        this.page = this.search.query.length === 0 ? await getProducts(1, 10) : await searchProducts(this.search.query, 1, 10);
     },
     methods: {
         getFileUrl,
         async nextPage() {
             if(this.page) {
                 if(this.page.page < this.page.totalPages) {
-                    this.page = await getProducts(this.page.page + 1, 10);
+                    this.page = this.search.query.length === 0 ? await getProducts(this.page.page + 1, 10) : await searchProducts(this.search.query, this.page.page + 1, 10);
                     return;
                 }
             }
+
+            this.page = this.search.query.length === 0 ? await getProducts(1, 10) : await searchProducts(this.search.query, 1, 10);
         },
         async prevPage() {
             if(this.page) {
                 if(this.page.page > 1) {
-                    this.page = await getProducts(this.page.page - 1, 10);
+                    this.page = this.search.query.length === 0 ? await getProducts(this.page.page - 1, 10) : await searchProducts(this.search.query, this.page.page - 1, 10);
                     return;
                 }
             }
+
+            this.page = this.search.query.length === 0 ? await getProducts(1, 10) : await searchProducts(this.search.query, 1, 10);
+        },
+        query() {
+            return this.search.query;
         }
+    },
+    computed: {
+        page: {
+            get() {
+                if(this.search.query) {
+                    return this.search._page;
+                }
+
+                return this._page;
+            },
+            set(value) {
+                if(this.search.query) {
+                    this.search._page = value;
+                }
+
+                this._page = value;
+            }
+        }
+    },
+    watch: {
+        'search.query': async function(newVal, oldVal) {
+            this.page = this.search.query.length === 0 ? await getProducts(1, 10) : await searchProducts(this.search.query, 1, 10);
+        },
     }
 }
 </script>

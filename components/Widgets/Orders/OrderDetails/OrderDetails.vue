@@ -21,7 +21,7 @@
 
         <div class="flex flex-col bg-white divide-y border-x border-b runded-b-lg">
             <div class="flex flex-row p-3 text-sm text-black/70">
-                <span>{{ new Date(order.created).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' }) }} from Default Sales Channel</span>
+                <span>Order #{{order.orderNumber}} -- {{ new Date(order.created).toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' }) }} from Default Sales Channel</span>
             </div>
         </div>
     </div>
