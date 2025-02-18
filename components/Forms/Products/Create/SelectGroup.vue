@@ -4,7 +4,7 @@ import { TagsInput, TagsInputInput, TagsInputItem, TagsInputItemDelete, TagsInpu
 import { ComboboxAnchor, ComboboxContent, ComboboxInput, ComboboxPortal, ComboboxRoot } from 'radix-vue'
 import { computed, ref } from 'vue'
 import { getProductGroups } from '~/services/products';
-
+import { getFileUrl } from '~/services/utils';
 const groups = await getProductGroups();
 
 const props = defineProps(['groups']);
@@ -62,7 +62,10 @@ const filteredGroups = computed(() => groups.filter(i => !modelValue.value.find(
                   }
                 }"
               >
+              <div class="flex flex-row items-center gap-1">
+                <div class="h-4 bg-primary aspect-square rounded bg-cover bg-center" :style="{ backgroundImage: `url('${getFileUrl(group, group.cover, { thumb: '15x15' })}')` }"></div>
                 {{ group.name }}
+              </div>
               </CommandItem>
             </CommandGroup>
           </CommandList>
