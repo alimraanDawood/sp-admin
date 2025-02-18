@@ -76,7 +76,7 @@ export async function deleteProduct(productId: string) {
 export async function getProductGroups(sort: string = '-created') {
     try {
         const results = await pocketbase.collection('ProductGroups').getFullList({ sort: '-created' });
-        return results.items;
+        return results;
     } catch(e) {
         throw(e);
     }

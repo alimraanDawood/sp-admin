@@ -8,7 +8,7 @@
                     <CreateGroup @updated="reloadGroups" />
                 </div>
             </div>
-            <div v-if="groups" class="flex flex-col w-full border-x">
+            <div class="flex flex-col w-full border-x">
                 <Table>
                     <TableHeader>
                         <TableRow>
@@ -22,7 +22,7 @@
                             </TableHead>
                         </TableRow>
                     </TableHeader>
-                    <TableBody>
+                    <TableBody v-if="groups">
                         <TableRow class="cursor-pointer" @click="$router.push(`/main/products/groups/${group.id}`)" v-for="group in groups">
                             <TableCell class="font-medium">
                                 <div class="flex flex-row items-center gap-2">
@@ -40,14 +40,22 @@
                             </TableCell>
                         </TableRow>
                     </TableBody>
+                    <TableBody v-else>
+                        <TableRow class="cursor-pointer" v-for="i in 10">
+                            <TableCell class="font-medium">
+                                <div class="bg-black/10 w-full h-4 rounded-lg animate-pulse"></div>
+                            </TableCell>
+                            <TableCell>
+                                <div class="bg-black/10 w-full h-4 rounded-lg animate-pulse"></div>
+                            </TableCell>
+                            <TableCell>
+                                <div class="bg-black/10 w-full h-4 rounded-lg animate-pulse"></div>
+                            </TableCell>
+                        </TableRow>
+                    </TableBody>
                 </Table>
             </div>
-            <div v-else class="flex divide-y flex-col w-full border-x">
-                <div class="p-4 flex flex-row" v-for="i in 10">
-                    <div class="h-12 flex flex-row w-full bg-black/10 rounded-lg animate-pulse"></div>
-                </Div>
-            </div>
-
+            
             <div class="flex flex-row p-3 border rounded-b-xl">
                 <div v-if="page" class="flex flex-row items-center">
                 </div>
@@ -81,6 +89,7 @@ export default {
     },
     async mounted() {
         this.groups = await getProductGroups();
+        console.log(this.groups);
     },
     methods: {
         getFileUrl,
