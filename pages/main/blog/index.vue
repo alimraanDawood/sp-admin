@@ -30,7 +30,7 @@ export default {
     },
     async mounted() {
         try {
-            this._page = await getArticlesPreview(1, 12);
+            this._page = await getArticlesPreview(1, 100);
         } catch(e) {
             console.error(e);
         }
@@ -48,14 +48,14 @@ export default {
     watch: {
         async query(newVal, oldVal) {
             if(newVal) {
-                this._filtered = await getArticlesPreview(1, 12, `title ~ '${this.query}'`)
+                this._filtered = await getArticlesPreview(1, 100, `title ~ '${this.query}'`)
             }
         }
     },
     methods: {
         async reloadArticles() {
             try {
-                this._page = await getArticlesPreview(1, 12);
+                this._page = await getArticlesPreview(1, 100);
             } catch(e) {
                 console.error(e);
             }

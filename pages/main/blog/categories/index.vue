@@ -81,17 +81,17 @@ export default {
         }
     },
     async mounted() {
-        this.page = await getCategories(1, 10);
+        this.page = await getCategories(1, 100);
     },
     methods: {
         getFileUrl,
         async reloadCategories() {
-            this.page = await getCategories(1, 10);
+            this.page = await getCategories(1, 100);
         },
         async nextPage() {
             if(this.page) {
                 if(this.page.page < this.page.totalPages) {
-                    this.page = await getCategories(this.page.page + 1, 10);
+                    this.page = await getCategories(this.page.page + 1, 100);
                     return;
                 }
             }
@@ -99,7 +99,7 @@ export default {
         async prevPage() {
             if(this.page) {
                 if(this.page.page > 1) {
-                    this.page = await getCategories(this.page.page - 1, 10);
+                    this.page = await getCategories(this.page.page - 1, 100);
                     return;
                 }
             }

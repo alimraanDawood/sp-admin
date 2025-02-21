@@ -93,14 +93,14 @@ export default {
         }
     },
     async mounted() {
-        this.articles = await getArticlesPreview(1, 10);
+        this.articles = await getArticlesPreview(1, 100);
     },
     computed: {
     },
     methods: {
         getFileUrl,
         async reloadArticles() {
-            this.articles = await getArticlesPreview(1, 10);
+            this.articles = await getArticlesPreview(1, 100);
         },
         toggleArticle(article, val) {
             if(val) {
