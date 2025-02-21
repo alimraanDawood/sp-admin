@@ -129,26 +129,6 @@
 </template>
 
 <script>
-
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from '@/components/ui/Dialog';
-
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-
 import CategoryInput from './CategoryInput.vue';
 
 import { useVuelidate } from '@vuelidate/core';
@@ -201,20 +181,7 @@ export default {
         }
     },
     components: {
-        Dialog,
-        DialogContent,
-        DialogDescription,
-        DialogHeader,
-        DialogTitle,
-        DialogTrigger,
-        CategoryInput,
-        Select,
-        SelectContent,
-        SelectGroup,
-        SelectItem,
-        SelectLabel,
-        SelectTrigger,
-        SelectValue,
+        
     },
     methods: {
         getFileUrl,
