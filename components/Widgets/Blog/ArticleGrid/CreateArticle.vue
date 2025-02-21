@@ -136,24 +136,6 @@
 
 <script>
 
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from '@/components/ui/dialog';
-
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 
 import CategoryInput from './CategoryInput.vue';
 
@@ -201,20 +183,7 @@ export default {
         }
     },
     components: {
-        Dialog,
-        DialogContent,
-        DialogDescription,
-        DialogHeader,
-        DialogTitle,
-        DialogTrigger,
-        CategoryInput,
-        Select,
-        SelectContent,
-        SelectGroup,
-        SelectItem,
-        SelectLabel,
-        SelectTrigger,
-        SelectValue,
+        
     },
     methods: {
         getFileUrl,
