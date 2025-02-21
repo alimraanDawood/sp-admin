@@ -53,11 +53,24 @@
                     </button>
                 </div>
 
+                
+                
                 <button v-wave @click="jumpTo('/main/blog/')" class="flex flex-row w-full items-center text-black/80 p-2 rounded py-1 text-sm gap-2 transition-all duration-300 ease-in-out hover:bg-black/5" :class="{ 'bg-white shadow hover:bg-white' : current === 'Blog' }">
                     <PhosphorIconNewspaper :size="18" />
                     Blog
                 </button>
+                
+                <div v-if="current?.includes('Blog')" class="flex flex-col gap-1">
+                    <button v-wave @click="jumpTo('/main/blog/authors/')" class="flex flex-row w-full items-center text-black/80 p-2 rounded py-1 text-sm gap-2 transition-all duration-300 ease-in-out hover:bg-black/5" :class="{ 'bg-white shadow hover:bg-white' : current === 'Blog-Authors' }">
+                        <PhosphorIconTag class="opacity-0" :size="18" />
+                        Authors
+                    </button>
 
+                    <button v-wave @click="jumpTo('/main/blog/categories/')" class="flex flex-row w-full items-center text-black/80 p-2 rounded py-1 text-sm gap-2 transition-all duration-300 ease-in-out hover:bg-black/5" :class="{ 'bg-white shadow hover:bg-white' : current === 'Blog-Categories' }">
+                        <PhosphorIconTag class="opacity-0" :size="18" />
+                        Article Categories
+                    </button>
+                </div>
                 <!-- <button v-wave @click="jumpTo('/main/products/')" class="flex flex-row w-full items-center text-black/80 p-2 rounded py-1 text-sm gap-2 transition-all duration-300 ease-in-out hover:bg-black/5" :class="{ 'bg-white shadow hover:bg-white' : current === 'Promotions' }">
                     <PhosphorIconTicket :size="18" />
                     Promotions

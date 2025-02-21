@@ -1,6 +1,6 @@
 <template>
     <div class="flex flex-col w-full p-3 h-full">
-        <ArticleGrid @reload="reloadArticles" :loading="page === null" :articles="page?.items" />
+        <ArticleGrid v-model:query="query" @reload="reloadArticles" :loading="page === null" :articles="page?.items" />
     </div>
 </template>
 
@@ -20,7 +20,9 @@ definePageMeta({
 export default {
     data() {
         return {
-            page: null
+            _page: null,
+            _filtered: null,
+            query: ''
         }
     },
     components: {
@@ -28,15 +30,32 @@ export default {
     },
     async mounted() {
         try {
-            this.page = await getArticlesPreview(1, 12);
+            this._page = await getArticlesPreview(1, 12);
         } catch(e) {
             console.error(e);
+        }
+    },
+    computed: {
+        page() {
+            
+            if(this.query) {
+                return this._filtered;
+            }
+
+            return this._page;
+        }
+    },
+    watch: {
+        async query(newVal, oldVal) {
+            if(newVal) {
+                this._filtered = await getArticlesPreview(1, 12, `title ~ '${this.query}'`)
+            }
         }
     },
     methods: {
         async reloadArticles() {
             try {
-                this.page = await getArticlesPreview(1, 12);
+                this._page = await getArticlesPreview(1, 12);
             } catch(e) {
                 console.error(e);
             }

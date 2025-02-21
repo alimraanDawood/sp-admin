@@ -1,28 +1,42 @@
 <template>
     <div class="flex flex-col w-full h-full p-3">
         <div class="flex flex-col bg-white w-full max-h-full">
-            <div class="flex flex-row p-3 border rounded-t-xl">
-                <span class="text-2xl font-medium">Products</span>
-
-                <div class="flex flex-row ml-auto gap-2">
-
-                    <div class="flex flex-row items-center gap-1">
-                        <div class="flex flex-row items-center gap-1 border-2 rounded-lg p-1 focus-within:border-primary">
-                            <PhosphorIconMagnifyingGlass :size="18" />
-
-                            <input placeholder="Search Products" v-model="search.query" class="bg-transparent focus:outline-none placeholder:text-sm text-sm" />
-
-                            <button>
-                                <PhosphorIconX :size="16" />
-                            </button>
+            <div class="flex flex-col w-full gap-2 p-3 border rounded-t-xl">
+                <div class="flex flex-row ">
+                    <span class="text-2xl font-medium">Products</span>
+    
+                    <div class="flex flex-row ml-auto gap-2">
+    
+                        <div class="hidden md:flex flex-row items-center gap-1">
+                            <div class="flex flex-row items-center gap-1 border-2 rounded-lg p-1 focus-within:border-primary">
+                                <PhosphorIconMagnifyingGlass :size="18" />
+    
+                                <input placeholder="Search Products" v-model="search.query" class="bg-transparent focus:outline-none placeholder:text-sm text-sm" />
+    
+                                <button>
+                                    <PhosphorIconX :size="16" />
+                                </button>
+                            </div>
                         </div>
+    
+                        <NuxtLink to="/main/products/create" v-wave
+                            class="bg-primary text-sm font-medium text-white flex flex-row gap-2 px-4 p-2 rounded-lg items-center">
+                            <PhosphorIconPlusCircle :size="18" weight="bold" />
+                            <span class="block" >Create Product</span>
+                        </NuxtLink>
                     </div>
+                    
+                </div>
+                <div class="md:hidden w-full flex flex-row items-center gap-1">
+                    <div class="flex flex-row w-full items-center gap-1 border-2 rounded-lg p-1 focus-within:border-primary">
+                        <PhosphorIconMagnifyingGlass :size="18" />
 
-                    <NuxtLink to="/main/products/create" v-wave
-                        class="bg-primary text-sm font-medium text-white flex flex-row gap-2 px-4 p-2 rounded-lg items-center">
-                        <PhosphorIconPlusCircle :size="18" weight="bold" />
-                        <span class="hidden lg:block" >Create Product</span>
-                    </NuxtLink>
+                        <input placeholder="Search Products" v-model="search.query" class="bg-transparent w-full focus:outline-none placeholder:text-sm text-sm" />
+
+                        <button>
+                            <PhosphorIconX :size="16" />
+                        </button>
+                    </div>
                 </div>
             </div>
             <div class="flex flex-col w-full border-x">

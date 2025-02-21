@@ -5,15 +5,22 @@
                 <div class="flex flex-row justify-between items-center gap-3">
                     <span class="font-medium">Articles</span>
                     <div
-                        class="flex flex-row text-black/60 border-2 p-1 px-2 gap-2 rounded items-center focus-within:border-primary/60 ml-auto">
+                        class="hidden lg:flex flex-row text-black/60 border-2 p-1 px-2 gap-2 rounded items-center focus-within:border-primary/60 ml-auto">
                         <PhosphorIconMagnifyingGlass :size="18" weight="bold" />
-                        <input class="w-full bg-transparent outline-none placeholder:text-black/40"
+                        <input v-model="_query" class="w-full bg-transparent outline-none placeholder:text-black/40"
                             placeholder="Search" />
                     </div>
 
                     <div class="flex flex-row gap-1">
                         <CreateArticle @updated="$emit('reload', true)" />
                     </div>
+                </div>
+
+                <div
+                    class="flex lg:hidden w-full flex-row text-black/60 border-2 p-1 px-2 gap-2 rounded items-center focus-within:border-primary/60 ml-auto">
+                    <PhosphorIconMagnifyingGlass :size="18" weight="bold" />
+                    <input v-model="_query" class="w-full bg-transparent outline-none w-full placeholder:text-black/40"
+                        placeholder="Search" />
                 </div>
             </div>
 
@@ -22,7 +29,7 @@
                 </div>
             </div>
 
-            <div v-else class="grid grid-cols-3 w-full h-full p-3 gap-3 overflow-y-scroll">
+            <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 w-full h-full p-3 gap-3 overflow-y-scroll">
                 <div  v-for="article in articles"
                     class="flex h-fit text-left flex-col">
                     <button @click="$router.push(`/main/blog/article/${article.id}`)" class="w-full aspect-video border border-b-0 shadow bg-primary/10 grid place-items-center rounded-t-lg bg-center bg-cover"
@@ -39,8 +46,12 @@
 
                             {{ new Date(article.date).toLocaleDateString('en-GB') }}
 
-                            <button @click="deleteArticle(article.id)"
+                            <button @click="openEditArticle(article)"
                                 class="ml-auto">
+                                <PhosphorIconPencil :size="20" />
+                            </button>
+                            <button @click="deleteArticle(article.id)"
+                                class="">
                                 <PhosphorIconTrash :size="20" />
                             </button>
                         </div>
@@ -66,19 +77,22 @@
                 </DialogFooter>
             </DialogContent>
         </Dialog>
+
+        <EditArticle @updated="$emit('reload', true)" ref="editArticle" v-model:open="dialogs.edit.open" />
     </div>
 </template>
 
 <script>
 import CreateArticle from './CreateArticle.vue';
+import EditArticle from './EditArticle.vue';
 import { getFileUrl } from '@/services/utils';
 
 import { deleteArticle } from '@/services/blog';
 import { toast } from 'vue-sonner';
 
 export default {
-    props: ['articles', 'loading'],
-    emits: ['reload'],
+    props: ['articles', 'loading', 'query'],
+    emits: ['reload' , 'update:query'],
     data() {
         return {
             showing: 'PUBLISHED', // PUBLISHED | UNPUBLISHED,
@@ -86,8 +100,18 @@ export default {
                 delete: {
                     open: false,
                     id: ''
+                },
+                edit: {
+                    open: false,
+                    article: null
                 }
             }
+        }
+    },
+    computed: {
+        _query: {
+            get() { return this.query },
+            set(val) { this.$emit('update:query', val) }
         }
     },
     methods: {
@@ -95,6 +119,10 @@ export default {
         deleteArticle(id) {
             this.dialogs.delete.id = id;
             this.dialogs.delete.open = true;
+        },
+        openEditArticle(article) {
+            console.log(this.$refs.editArticle.openEditForm)
+            this.$refs.editArticle.openEditForm(article);
         },
         async confirmDeleteArticle() {
             try {
@@ -115,7 +143,8 @@ export default {
         }
     },
     components: {
-        CreateArticle
+        CreateArticle,
+        EditArticle
     }
 }
 </script>

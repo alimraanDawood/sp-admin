@@ -1,15 +1,9 @@
 <template>
-    <Dialog v-model:open="editForm.open">
-        <DialogTrigger>
-            <button v-wave
-                class="bg-primary text-sm font-medium text-white flex flex-row gap-2 px-4 p-2 rounded-lg items-center">
-                <PhosphorIconPlusCircle :size="18" weight="bold" />
-                Create
-            </button>
-        </DialogTrigger>
+    <Dialog v-model:open="_open">
+        
         <DialogContent :side="$viewport.isGreaterThan('tablet') ? 'right' : 'bottom'">
             <DialogHeader>
-                <DialogTitle>Create Article</DialogTitle>
+                <DialogTitle>Edit Article</DialogTitle>
             </DialogHeader>
 
             <div class="flex flex-col w-full gap-5 p-3">
@@ -123,7 +117,7 @@
                 <div class="flex flex-row gap-2 justify-end">
                     <button :disabled="editForm.saving" @click="closeEditForm"
                         class="disabled:opacity-50 border px-4 p-1 text-sm font-medium bg-[#fafafa] rounded text-black/70">Cancel</button>
-                    <button :disabled="editForm.saving" @click="createArticle"
+                    <button :disabled="editForm.saving" @click="updateArticle"
                         class="disabled:opacity-50 px-4 p-1 text-sm font-medium bg-primary rounded text-white">
                         <PhosphorIconSpinner v-if="editForm.saving" class="animate-spin" />
                         <span v-else>Save</span>
@@ -160,13 +154,13 @@ import CategoryInput from './CategoryInput.vue';
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 
-import { createArticle, getFullAuthors } from '@/services/blog';
+import { updateArticle, getFullAuthors } from '@/services/blog';
 import { toast } from 'vue-sonner';
 import { getFileUrl } from '@/services/utils';
 
 export default {
-    props: ['article'],
-    emits: ['updated'],
+    props: ['open'],
+    emits: ['updated' ,'update:open'],
     setup() {
         const v$ = useVuelidate()
         return { v$ };
@@ -184,11 +178,17 @@ export default {
                     type: 'Article'
                 },
                 saving: false
-            }
+            },
+            article: null
         }
     },
     async mounted() {
-        this.authors = await getFullAuthors();
+    },
+    computed: {
+        _open: {
+            get() { return this.open },
+            set(val) { this.$emit('update:open', val); }
+        }
     },
     validations() {
         return {
@@ -234,42 +234,52 @@ export default {
             };
             input.click();
         },
-        openEditForm() {
+        async openEditForm(article) {
+            this.article = article;
+            this.authors = await getFullAuthors();
+            
             this.editForm.values = {
                 title: this.article.title,
-                content: this.article.content,
                 cover: this.article.cover,
-                categories: this.article.categories,
-                author: this.article.author
+                categories: this.article.expand.categories,
+                author: this.article.authors[0],
+                type: this.article.category
             }
-            this.editForm.open = true;
+            console.log(this.article)
+            this._open = true;
         },
 
         closeEditForm() {
             this.editForm.values = {
                 title: '',
-                content: '',
                 cover: null,
                 categories: [],
-                author: null
+                author: null,
+                type: 'Article'
             };
 
             this.editForm.saving = false;
-            this.editForm.open = false;
+            this._open = false;
         },
-        async createArticle() {
+        async updateArticle() {
             this.v$.$validate();
             if (this.v$.$errors.length === 0) {
                 try {
                     this.editForm.saving = true;
-                    const article = await createArticle({ title: this.editForm.values.title, content: '', cover: this.editForm.values.cover, date: new Date(), categories: [...this.editForm.values.categories.map((cat) => cat.id)], authors: [this.editForm.values.author], category: this.editForm.values.type });
+                    const updatedArticle = await updateArticle(this.article.id, { 
+                        title: this.editForm.values.title, 
+                        cover: this.editForm.values.cover, 
+                        categories: [...this.editForm.values.categories.map((cat) => cat.id)], 
+                        authors: [this.editForm.values.author], 
+                        category: this.editForm.values.type 
+                    });
 
-                    toast.success('Successfully created article!');
+                    toast.success('Successfully updated article!');
                     this.$emit('updated');
                     this.closeEditForm();
                 } catch (e) {
                     console.error(e);
-                    toast.error('Failed to create article!');
+                    toast.error('Failed to update article!');
                 }
 
                 this.editForm.saving = false;
