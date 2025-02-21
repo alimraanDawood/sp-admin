@@ -143,7 +143,7 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-} from '@/components/ui/Dialog';
+} from '@/components/ui/dialog';
 
 import {
   Select,
