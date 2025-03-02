@@ -23,12 +23,12 @@
                 </div>
 
                 <div class="flex flex-col w-full text-right">
-                    <div class="" >
+                    <a :href="`MAILTO:${order.expand.customer?.email}`" class="underline text-primary" >
                         {{ order.expand.customer?.email }}
-                    </div>
-                    <div class="" >
+                    </a>
+                    <a :href="`TEL:${order.expand.customer?.phone}`" class="underline text-primary" >
                         {{ order.expand.customer?.phone }}
-                    </div>
+                    </a>
                 </div>
             </div>
         </div>

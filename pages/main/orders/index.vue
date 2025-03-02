@@ -58,13 +58,13 @@
                                 <div v-else-if="order.orderStatus === 'PENDING'" class="flex flex-row p-1 px-2 rounded-full border border-orange-500 text-xs bg-orange-500 items-center justify-center font-medium text-white">
                                     Pending
                                 </div>
-                                
-                                <div v-else-if="order.orderStatus === 'SHIPPED'" class="flex flex-row p-1 px-2 rounded-full border border-blue-500 text-xs bg-blue-500 items-center justify-center font-medium text-white">
-                                    Shipped
-                                </div>
 
-                                <div v-else-if="order.orderStatus === 'DELIVERED'" class="flex flex-row p-1 px-2 rounded-full border border-teal-500 text-xs bg-teal-500 items-center justify-center font-medium text-white">
-                                    Delivered
+                                <div v-else-if="order.orderStatus === 'PACKING'" class="flex flex-row p-1 px-2 rounded-full border border-teal-500 text-xs bg-teal-500 items-center justify-center font-medium text-white">
+                                    Packing
+                                </div>
+                                
+                                <div v-else-if="order.orderStatus === 'DELIVERY'" class="flex flex-row p-1 px-2 rounded-full border border-teal-500 text-xs bg-teal-500 items-center justify-center font-medium text-white">
+                                    Delivery
                                 </div>
 
                                 <div v-else-if="order.orderStatus === 'CANCELLED'" class="flex flex-row p-1 px-2 rounded-full border border-red-500 text-xs bg-red-500 items-center justify-center font-medium text-white">

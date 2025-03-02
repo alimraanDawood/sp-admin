@@ -36,6 +36,13 @@
                     Orders
                 </button>
 
+                <div v-if="current?.includes('Orders')" class="flex flex-col gap-1">
+                    <button v-wave @click="jumpTo('/main/orders/couriers/')" class="flex flex-row w-full items-center text-black/80 p-2 rounded py-1 text-sm gap-2 transition-all duration-300 ease-in-out hover:bg-black/5" :class="{ 'bg-white shadow hover:bg-white' : current === 'Orders-Couriers' }">
+                        <PhosphorIconMotorcycle class="opacity-0" :size="18" />
+                        Couriers
+                    </button>
+                </div>
+
                 <!-- <button v-wave @click="jumpTo('/main/products/')" class="flex flex-row w-full items-center text-black/80 p-2 rounded py-1 text-sm gap-2 transition-all duration-300 ease-in-out hover:bg-black/5" :class="{ 'bg-white shadow hover:bg-white' : current === 'Inventory' }">
                     <PhosphorIconStorefront :size="18" />
                     Inventory

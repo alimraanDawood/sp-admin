@@ -36,46 +36,56 @@
                 </div>
             </div>
 
-            <div class="flex flex-row gap-3 w-full p-5 py-3">
-                <ConfirmDialog v-if="order.paymentStatus === 'PENDING'"  title="Verify Payment" description="Are you sure you want to verify this payment?" @onConfirm="verifyPayment">
-                    <template #trigger>
-                        <button :disabled="verifying" v-wave class="flex flex-row disabled:animate-pulse px-4 bg-black/5 gap-2 text-sm border font-medium text-black/70 p-1">
-                            <span v-if="verifying">Verifying</span>
-                            <span v-else >Verify Payment</span>
+            <div class="flex flex-col w-full p-5 py-3 gap-5">
+                <div class="flex flex-col" v-if="order.paymentStatus === 'PENDING'">
+                    <span>Has the customer paid?</span>
+                    <ConfirmDialog   title="Verify Payment" description="Are you sure you want to verify this payment?" @onConfirm="verifyPayment">
+                        <template #trigger>
+                            <button :disabled="verifying" v-wave class="flex flex-row disabled:animate-pulse px-4 bg-primary/10 border border-primary rounded gap-2 text-sm border font-medium text-primary p-1">
+                                <span v-if="verifying">Verifying</span>
+                                <span v-else >Verify Payment</span>
+    
+                                <PhosphorIconSpinner v-if="verifying" :size="20" class="animate-spin" />
+                            </button>
+                        </template>
+    
+                        <template #body>
+                            <div class="flex flex-row items-center gap-1">
+                                <Switch :checked="sendNotification" @update:checked="e => this.sendNotification = e" />
+                                <span class="font-medium text-black/70">Send Notification to customer.</span>        
+                            </div>
+                        </template>
+                    </ConfirmDialog>
+                </div>
 
-                            <PhosphorIconSpinner v-if="verifying" :size="20" class="animate-spin" />
-                        </button>
-                    </template>
+                <div class="flex flex-col" v-if="order.paymentStatus === 'COMPLETED'">
+                    <span>Undo payment Verification</span>
+                    <ConfirmDialog   title="Unverify Payment" description="Are you sure you want to undo verification of this payment?" @onConfirm="unverifyPayment">
+                        <template #trigger>
+                            <button :disabled="verifying" v-wave class="flex flex-row disabled:animate-pulse px-4 bg-primary/10 border border-primary rounded gap-2 text-sm border font-medium text-primary p-1">
+                                <span v-if="verifying">Verifying</span>
+                                <span v-else >Unverify Payment</span>
+    
+                                <PhosphorIconSpinner v-if="verifying" :size="20" class="animate-spin" />
+                            </button>
+                        </template>
+    
+                        <template #body>
+                            
+                        </template>
+                    </ConfirmDialog>
+                </div>
 
-                    <template #body>
-                        <div class="flex flex-row items-center gap-1">
-                            <Switch :checked="sendNotification" @update:checked="e => this.sendNotification = e" />
-                            <span class="font-medium text-black/70">Send Notification to customer.</span>        
-                        </div>
-                    </template>
-                </ConfirmDialog>
+                <div class="flex flex-col">
+                    <span>Send an email to the customer directing them on how to pay.</span>
+                    <button @click="sendPaymentGuide" :disabled="sendingGuide" v-wave class="flex flex-row disabled:animate-pulse px-4 bg-primary/10 border border-primary rounded gap-2 text-sm border font-medium text-primary p-1 w-fit">
+                        <span v-if="sendingGuide">Sending</span>
+                        <span v-else >Send Payment Guide</span>
+    
+                        <PhosphorIconSpinner v-if="sendingGuide" :size="20" class="animate-spin" />
+                    </button>
+                </div>
 
-                <ConfirmDialog v-if="order.paymentStatus === 'COMPLETED'"  title="Unverify Payment" description="Are you sure you want to undo verification of this payment?" @onConfirm="unverifyPayment">
-                    <template #trigger>
-                        <button :disabled="verifying" v-wave class="flex flex-row disabled:animate-pulse px-4 bg-black/5 gap-2 text-sm border font-medium text-black/70 p-1">
-                            <span v-if="verifying">Verifying</span>
-                            <span v-else >Unverify Payment</span>
-
-                            <PhosphorIconSpinner v-if="verifying" :size="20" class="animate-spin" />
-                        </button>
-                    </template>
-
-                    <template #body>
-                        
-                    </template>
-                </ConfirmDialog>
-
-                <button @click="sendPaymentGuide" :disabled="sendingGuide" v-wave class="flex flex-row disabled:animate-pulse px-4 bg-black/5 gap-2 text-sm border font-medium text-black/70 p-1">
-                    <span v-if="sendingGuide">Sending</span>
-                    <span v-else >Send Payment Guide</span>
-
-                    <PhosphorIconSpinner v-if="sendingGuide" :size="20" class="animate-spin" />
-                </button>
             </div>
         </div>
     </div>
