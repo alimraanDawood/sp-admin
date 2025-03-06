@@ -5,7 +5,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
   const pb = new Pocketbase(useServerUrl());
 
 
-  if (pb.authStore.isValid) {
+  if (pb.authStore.isValid && pb.authStore.record.collectionName === 'Admins') {
     return;
   }
 

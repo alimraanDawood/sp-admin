@@ -65,6 +65,8 @@
                 </AlertDialog>
 
             </div>
+
+            
         </div>
 
         <div v-if="order.orderStatus !== 'CANCELLED'" class="flex flex-col">
@@ -206,19 +208,29 @@
             </div>
         </div>
 
-        <div class="flex flex-col bg-white divide-y border-x border-b runded-b-lg">
+        <div class="flex flex-col bg-white divide-y border-x border-b rounded-b-lg">
             <div class="flex flex-row p-3 text-sm text-black/70">
                 <span>Order #{{ order.orderNumber }} -- {{ new Date(order.created).toLocaleString('en-GB', {
                     day:
                         '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit'
                 }) }} from Default Sales Channel</span>
             </div>
+            <div v-if="order.orderStatus !== 'CANCELLED' && order.orderStatus !== 'PENDING'" class="flex flex-col p-3">
+                <span>Send an email to the customer confirming that their order is ready.</span>
+                <button @click="sendOrderReadyNotification" :disabled="sendingGuide" v-wave class="flex flex-row disabled:animate-pulse px-4 bg-primary/10 border border-primary rounded gap-2 text-sm border font-medium text-primary p-1 w-fit">
+                    <span v-if="sendingGuide">Sending</span>
+                    <span v-else >Send Order Ready Email</span>
+    
+                    <PhosphorIconSpinner v-if="sendingGuide" :size="20" class="animate-spin" />
+                </button>
+            </div>
+
         </div>
     </div>
 </template>
 
 <script>
-import { updateOrder } from '@/services/orders';
+import { updateOrder, sendOrderReadyNotification } from '@/services/orders';
 import { toast } from 'vue-sonner';
 
 export default {
@@ -226,7 +238,8 @@ export default {
     emits: ['updated'],
     data() {
         return {
-            loading: false
+            loading: false,
+            sendingGuide: false
         }
     },
     methods: {
@@ -267,6 +280,21 @@ export default {
             }
             this.loading = false;
 
+        },
+
+        async sendOrderReadyNotification() {
+            this.sendingGuide = true;
+            
+            try {
+                await sendOrderReadyNotification(this.order.id);
+                toast.success("Successfully Sent Notification!");
+            } catch(e) {
+                console.error(e);
+
+                toast.error("Something went wrong!")
+            }
+
+            this.sendingGuide = false;
         }
 
     }

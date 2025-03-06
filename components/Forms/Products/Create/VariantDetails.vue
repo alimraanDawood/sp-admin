@@ -170,7 +170,7 @@ export default {
 		addMedia() {
 			const input = document.createElement('input');
 			input.type = 'file';
-			input.accept = 'image/jpeg';
+			input.accept = 'image/*';
 			input.multiple = true;
 			input.onchange = (event) => {
 				const files = Array.from(event.target.files);

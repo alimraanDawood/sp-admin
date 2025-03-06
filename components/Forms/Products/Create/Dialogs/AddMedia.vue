@@ -159,7 +159,7 @@ function onDrop(files) {
 const { isOverDropZone } = useDropZone(dropZoneRef, {
     onDrop,
     // specify the types of data to be received.
-    dataTypes: ['image/jpeg'],
+    dataTypes: ['image/*'],
     // control multi-file drop
     multiple: true,
     // whether to prevent default behavior for unhandled events
@@ -169,7 +169,7 @@ const { isOverDropZone } = useDropZone(dropZoneRef, {
 function addMedia() {
     const input = document.createElement('input');
     input.type = 'file';
-    input.accept = 'image/jpeg';
+    input.accept = 'image/*';
     input.multiple = true;
     input.onchange = (event) => {
         const files = Array.from(event.target.files);

@@ -51,6 +51,15 @@ export async function sendPaymentGuideNotification(orderId : string) {
     }
 }
 
+export async function sendOrderReadyNotification(orderId : string) {
+    try {
+        const result = await $fetch(useServerUrl() + `/api/send-order-ready-notification/${orderId}`);
+        return result;
+    } catch(e) {
+        throw(e);
+    }
+}
+
 export async function searchOrders(query: string, page : number, numPerPage : number) {
     try {
         const order = await pocketbase.collection('Orders').getList(page, numPerPage, { expand: 'customer,orderItems,orderItems.variant,orderItems.variant.options', filter: `id ~ '${query}' || orderItems.name ~ '${query}' || customer.name ~ '${query}'`, sort: '-created' });

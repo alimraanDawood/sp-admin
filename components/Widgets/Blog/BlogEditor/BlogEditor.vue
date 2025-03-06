@@ -208,7 +208,7 @@ function setLink() {
 const { isOverDropZone } = useDropZone(dropZoneRef, {
     onDrop,
     // specify the types of data to be received.
-    dataTypes: ['image/jpeg'],
+    dataTypes: ['image/*'],
     // control multi-file drop
     multiple: true,
     // whether to prevent default behavior for unhandled events
