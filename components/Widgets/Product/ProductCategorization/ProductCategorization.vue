@@ -12,7 +12,9 @@
             <div class="gap-3 grid grid-cols-2 p-5 py-3">
                 <span>Groups</span>
 
-                <span>{{ groups.map(group => group.name).join(', ') }}</span>
+                <EditProductGroup v-model:open="editGroups.open" :product="product">
+                    <Button variant="outline" size="sm">Manage Groups</Button>
+                </EditProductGroup>
             </div>
 
             <div class="gap-3 grid grid-cols-2 p-5 py-3">
@@ -29,6 +31,7 @@
 <script>
 import { getProductGroupsFromProduct } from '~/services/products';
 import EditProductCategorization from './EditProductCategorization.vue';
+import EditProductGroup from './EditProductGroup.vue';
 
 export default {
     props: ['product'],
@@ -38,23 +41,18 @@ export default {
             editCategorization: {
                 open: false
             },
+            editGroups: {
+                open: false
+            },
             groups: []
         }
     },
-    async mounted() {
-        await this.getProductGroups();
-    },
     methods: {
-        async getProductGroups() {
-            try {
-                this.groups = await getProductGroupsFromProduct(this.product.id);
-            } catch(e) {
-                console.error(e);
-            }
-        }
+
     },
     components: {
-        EditProductCategorization
+        EditProductCategorization,
+        EditProductGroup
     }
 }
 </script>
