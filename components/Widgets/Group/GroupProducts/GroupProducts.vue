@@ -4,19 +4,9 @@
             <span class="text-lg font-medium">Products</span>
 
             <div class="ml-auto">
-                <DropdownMenu>
-                    <DropdownMenuTrigger as-child>
-                        <button class="hover:bg-black/10 rounded-lg p-1 transition-all duration-400 ease-in-out">
-                            <PhosphorIconDotsThree :size="24" />
-                        </button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                        <DropdownMenuItem @click="$router.push(`/main/products/groups/${group.id}/products`)">
-                            <PhosphorIconPlus :size="14" /> Add
-                        </DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
-
+                <Button size="icon" @click="$router.push(`/main/products/groups/${group.id}/products`)">
+                    <PhosphorIconPlus :size="14" />
+                </Button>
             </div>
         </div>
 

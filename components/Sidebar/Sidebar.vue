@@ -93,10 +93,10 @@
 
                 <div class="flex flex-row p-2 py-1 items-center gap-3">
                     <div class=" bg-white border-2 border-black/10 rounded-lg grid place-items-center w-8 text-sm aspect-square bg-center bg-cover" >
-                        <span >{{ signedInAdmin.name[0] }}</span>
+                        <span >{{ signedInAdmin?.name[0] }}</span>
                     </div>
     
-                    <span class="w-full text-sm">{{ signedInAdmin.name }}</span>
+                    <span class="w-full text-sm">{{ signedInAdmin?.name }}</span>
     
                     <button>
                         <PhosphorIconDotsThree :size="24" />
