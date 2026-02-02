@@ -22,11 +22,6 @@
                         </template>
                     </BreadcrumbList>
                 </Breadcrumb>
-
-                <button class="ml-auto">
-                    <PhosphorIconBell :size="24" />
-                </button>
-
             </div>
 
             <div class="flex flex-col w-full overflow-y-scroll h-full">

@@ -5,5 +5,5 @@ const pb = new Pocketbase(SERVER_URL);
 
 
 export function getFileUrl(record : any, url : string, options : any) {
-    return pb.files.getUrl(record, url, options);
+    return pb.files.getURL(record, url, options);
 }
